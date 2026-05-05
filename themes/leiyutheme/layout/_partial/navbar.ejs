@@ -1,0 +1,49 @@
+<nav id="navbar" class="navbar fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/90 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl overflow-hidden shadow-[0_0_20px_#00f0ff] bg-black">
+                <img src="/images/logo.jpg" alt="雷域电声 Logo" class="w-full h-full object-cover">
+            </div>
+            <div>
+                <span class="text-2xl font-semibold tracking-tighter">雷域电声</span>
+                <span class="text-xs text-[#00f0ff] font-medium block -mt-1">Leiyu Electroacoustic</span>
+            </div>
+        </a>
+
+        <!-- 桌面菜单 -->
+        <div class="hidden md:flex items-center gap-8 text-sm font-medium">
+            <a href="/" class="hover:text-[#00f0ff] transition-colors">首页</a>
+            <a href="/#about" class="hover:text-[#00f0ff] transition-colors">关于我们</a>
+            <a href="/products/" class="hover:text-[#00f0ff] transition-colors">产品中心</a>
+            <a href="/#projects" class="hover:text-[#00f0ff] transition-colors">案例·评价</a>
+            <a href="/tech/" class="hover:text-[#00f0ff] transition-colors">技术·资讯</a>
+            <a href="/#contact" class="hover:text-[#00f0ff] transition-colors">联系我们</a>
+        </div>
+
+        <!-- 右侧按钮 -->
+        <div class="flex items-center gap-4">
+            <a href="/#contact"
+               class="bg-[#00f0ff] hover:bg-[#00e0ee] text-[#0a0a0a] font-semibold px-6 py-2.5 rounded-3xl text-sm flex items-center gap-2 transition-all">
+                <i class="fa-solid fa-paper-plane"></i>
+                获取报价
+            </a>
+            <button onclick="toggleMobileMenu()" class="md:hidden text-2xl">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 移动端菜单 -->
+    <div id="mobile-menu" class="hidden md:hidden bg-[#0a0a0a] border-t border-white/10 px-6 py-4">
+        <div class="flex flex-col gap-4 text-sm font-medium">
+            <a href="/" onclick="toggleMobileMenu()" class="hover:text-[#00f0ff]">首页</a>
+            <a href="/#about" onclick="toggleMobileMenu()" class="hover:text-[#00f0ff]">关于我们</a>
+            <a href="/products/" onclick="toggleMobileMenu()" class="hover:text-[#00f0ff]">产品中心</a>
+            <a href="/#projects" onclick="toggleMobileMenu()" class="hover:text-[#00f0ff]">案例·评价</a>
+            <a href="/tech/" class="hover:text-[#00f0ff]">技术·资讯</a>
+            <a href="/#contact" onclick="toggleMobileMenu()" class="hover:text-[#00f0ff]">联系我们</a>
+        </div>
+    </div>
+</nav>

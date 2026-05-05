@@ -1,0 +1,2289 @@
+<!-- 顶部横幅 -->
+<header class="relative pt-32 md:pt-44 pb-16 md:pb-24 overflow-hidden bg-[#050505]">
+    <div class="absolute inset-0 z-0">
+        <img
+            src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2000&auto=format&fit=crop"
+            alt="Products Center Banner"
+            class="w-full h-full object-cover opacity-60"
+        />
+        <div class="absolute inset-0 bg-gradient-to-r from-[#0a0a0a] via-[#0a0a0a]/80 to-[#0a0a0a]/40"></div>
+    </div>
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 text-white">
+        <div class="inline-block px-3 py-1 bg-[#00f0ff]/10 border border-[#00f0ff]/30 text-[#00f0ff] text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase mb-4 rounded backdrop-blur-sm">
+            Product Center
+        </div>
+        <h1 class="text-4xl md:text-6xl font-bold mb-4 tracking-tight">产品中心</h1>
+        <p class="text-gray-300 text-base md:text-xl max-w-2xl font-light leading-relaxed">
+            探索雷域电声全系产品。从澎湃震撼的大型线阵，到精密高效的数字心脏，为您构建无可挑剔的声学现场。
+        </p>
+    </div>
+</header>
+
+<!-- 分类筛选导航栏（sticky） -->
+<div id="filter-bar" class="sticky top-[64px] z-40 bg-gray-50/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <!-- 主分类 -->
+        <nav id="main-cat-nav" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 md:pb-0">
+            <button
+                data-cat="全部"
+                onclick="setCategory('全部')"
+                class="cat-btn flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all border bg-[#00f0ff] border-transparent text-white shadow-md"
+            >
+                <i class="fa-solid fa-layer-group text-xs"></i> 全部
+            </button>
+            <button
+                data-cat="音箱"
+                onclick="setCategory('音箱')"
+                class="cat-btn flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all border bg-white border-gray-200 text-gray-600 hover:border-gray-400"
+            >
+                <i class="fa-solid fa-volume-high text-xs"></i> 音箱
+            </button>
+            <button
+                data-cat="功放"
+                onclick="setCategory('功放')"
+                class="cat-btn flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all border bg-white border-gray-200 text-gray-600 hover:border-gray-400"
+            >
+                <i class="fa-solid fa-bolt text-xs"></i> 功放
+            </button>
+        </nav>
+
+        <!-- 右侧：下载目录 + 搜索 -->
+        <div class="flex items-center gap-3">
+            <a href="/2026-EGT-E-CATALOG.pdf" download="2026 EGT E-CATALOG.pdf" class="hidden sm:flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white rounded-full text-sm font-bold hover:bg-black transition-all shadow-md">
+                <i class="fa-solid fa-download text-xs"></i>
+                获取 2026 目录
+            </a>
+            <div class="relative w-full md:w-64">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                <input
+                    type="search"
+                    id="search-input"
+                    placeholder="搜索型号..."
+                    oninput="onSearch(this.value)"
+                    class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200 rounded-full text-sm text-gray-900 focus:outline-none focus:border-[#00f0ff] transition-all"
+                />
+            </div>
+        </div>
+    </div>
+
+    <!-- 子分类导航 -->
+    <div id="sub-cat-bar" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 bg-white border-t border-gray-100 flex items-center gap-2 overflow-x-auto no-scrollbar">
+        <span class="text-[10px] text-gray-400 font-bold mr-2 uppercase tracking-widest flex-shrink-0">Series:</span>
+        <div id="sub-cat-btns" class="flex items-center gap-2"></div>
+    </div>
+</div>
+
+<!-- 产品列表区域 -->
+<section id="products-list-view" class="bg-white min-h-[60vh]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+        <div class="flex items-center justify-between mb-12">
+            <h2 id="section-title" class="text-2xl font-bold text-gray-900">所有设备</h2>
+            <div id="product-count" class="text-xs font-semibold text-gray-500 bg-gray-100 px-3 py-1.5 rounded-lg border border-gray-200">
+                -- 款产品
+            </div>
+        </div>
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
+        <div id="empty-state" class="hidden flex-col items-center justify-center py-32 bg-gray-50 rounded-3xl border border-dashed border-gray-300 text-center px-4">
+            <div class="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mb-6">
+                <i class="fa-solid fa-magnifying-glass text-3xl text-gray-400"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">该系列暂无产品</h3>
+            <p class="text-gray-500 text-sm mb-8">我们将尽快更新产品信息</p>
+        </div>
+    </div>
+</section>
+
+<!-- 产品详情页（默认隐藏） -->
+<section id="product-detail-view" class="hidden bg-white min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <button
+            onclick="closeDetail()"
+            class="group flex items-center gap-2 text-gray-500 hover:text-black font-medium transition-colors mb-12"
+        >
+            <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+            返回产品中心
+        </button>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 mb-20">
+            <!-- 产品图 -->
+            <div class="bg-gray-50 rounded-2xl flex items-center justify-center aspect-square border border-gray-100 overflow-hidden shadow-sm">
+                <span id="detail-image" class="text-[160px] sm:text-[220px] drop-shadow-lg"></span>
+            </div>
+            <!-- 产品信息 -->
+            <div class="flex flex-col justify-center">
+                <div class="mb-4">
+                    <span id="detail-category" class="text-[#00f0ff] font-bold text-sm tracking-widest uppercase"></span>
+                </div>
+                <h1 id="detail-name" class="text-4xl sm:text-5xl font-bold mb-8 leading-tight text-black"></h1>
+                <div class="h-1 w-20 bg-[#00f0ff] mb-8"></div>
+                <p id="detail-desc" class="text-lg text-gray-600 leading-relaxed font-light mb-8"></p>
+                <a href="/#contact"
+                   class="flex items-center justify-center gap-2 w-full sm:w-fit px-10 py-4 bg-[#00f0ff] text-white font-bold rounded-full shadow-[0_4px_20px_rgba(0,240,255,0.3)] hover:brightness-110 hover:shadow-[0_6px_25px_rgba(0,240,255,0.4)] transition-all mb-10 active:scale-95">
+                    <i class="fa-regular fa-message text-sm"></i>
+                    获取产品报价
+                </a>
+            </div>
+        </div>
+
+        <!-- 产品参数表格 -->
+        <section class="mb-20">
+            <h2 class="text-2xl font-bold mb-8 text-[#5a2d82] flex items-center gap-3">
+                产品参数
+            </h2>
+            <div class="border border-gray-200 rounded-sm overflow-hidden">
+                <table class="w-full text-sm text-left border-collapse">
+                    <tbody id="detail-specs-tbody"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</section>
+
+<style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .product-card-enter { animation: cardFadeIn 0.3s ease-out forwards; }
+    @keyframes cardFadeIn {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<script>
+// ========== 产品数据 ==========
+const PRODUCTS = [
+    {
+        "id": 1,
+        "name": "EASY-1018 有源电动升降线阵系统",
+        "category": "音箱",
+        "subCategory": "有源电动升降线阵系统",
+        "size": "18英寸+双10英寸",
+        "power": "2x1200W",
+        "imp": "8Ω",
+        "freq": "40Hz-18kHz",
+        "image": "🔊",
+        "desc": "EASY-1018是一款创新的有源电动升降线阵系统，由单18寸超低音和双10寸同轴有源音箱组成。该系统集成电动升降机构，极大简化了演出部署流程。内置大功率Class-D功放与24bit DSP数字音频处理，支持PC端软件远程监控。箱体采用18mm高密度多层夹板，表面喷涂高强度聚脲防水漆，具备90°x20°的精准指向性，是专业扩声领域的高端移动化解决方案。",
+        "tags": [
+            "有源系统",
+            "线阵列",
+            "同轴驱动",
+            "电动升降"
+        ],
+        "specs": {
+            "description": "Active Electric Robotic Lifting Line Array System 有源电动升降线阵系统",
+            "configuration": "Active single 18\" Subwoofer + Double Coaxial Neodymium 10\" 3-way Line Array 有源18寸+双10寸同轴三分频系统",
+            "driversLF": "1×18\" 220 Magnet 100mm Voice Coil (1x18\" 220磁 100芯 超低音喇叭)",
+            "driversHF": "2×10\" Coaxial Driver, 135 Neodymium Magnet 75mm Voice Coil (2×10\" 钕磁同轴喇叭, 135钕磁 75芯音圈)",
+            "freqRange": "40Hz - 18kHz (-6dB)",
+            "sensitivity": "N/A",
+            "maxSpl": "129dB",
+            "nominalImp": "8Ω",
+            "contPower": "2x1200W@8ohm (Amplifier output)",
+            "recAmp": "Built-in Class-D Amplifier",
+            "enclosure": "18mm high density multi-layer plywood (18mm高密度多层夹板)",
+            "finish": "Spray polyurea waterproof paint (箱体表面喷聚脲防水漆)",
+            "dimension": "500×650×1703mm (Working/使用状态)",
+            "weight": "100kg"
+        }
+    },
+    {
+        "id": 2,
+        "name": "VK208 线阵音箱",
+        "category": "音箱",
+        "subCategory": "VK系列 线阵系统",
+        "size": "双8英寸",
+        "power": "400W",
+        "imp": "16+16Ω",
+        "freq": "100Hz-16kHz",
+        "image": "🔊",
+        "desc": "VK208是一款高压缩波导紧凑型扩声系统，采用双8英寸钕磁低音单元和1.4英寸钕磁高音驱动器。其设计具有高功率持续输出和稳定的动态表现，专为室内外扩声需求而生。配备精密的四点式吊挂系统，不仅连接操作人性化，且能实现快速、精准的声场覆盖，是礼堂、体育馆及大型演出的理想选择。",
+        "tags": [
+            "钕磁单元",
+            "双8寸",
+            "线阵列"
+        ],
+        "specs": {
+            "description": "Line Array Speaker 线阵音箱",
+            "configuration": "2×8\", 2-Way 双8寸, 2分频",
+            "driversLF": "2×8\" 50芯 钕磁低音喇叭",
+            "driversHF": "2×1.4\" 75芯 钕磁高音喇叭",
+            "freqRange": "100Hz-16kHz",
+            "sensitivity": "98/106dB (f>100Hz)",
+            "maxSpl": "130/132dB",
+            "nominalImp": "16+16Ω",
+            "contPower": "400W+90W/1600W+360W",
+            "recAmp": "600W-1000W",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Waterproof Polyurea Paint 聚脲防水漆",
+            "dimension": "616×427×220mm",
+            "weight": "19kg"
+        }
+    },
+    {
+        "id": 3,
+        "name": "VK210 线阵音箱",
+        "category": "音箱",
+        "subCategory": "VK系列 线阵系统",
+        "size": "双10英寸",
+        "power": "600W",
+        "imp": "8+8Ω",
+        "freq": "80Hz-16kHz",
+        "image": "🔊",
+        "desc": "VK210线阵音箱采用双10英寸钕磁低音与双1.4英寸钕磁高音配置，能在高声压级下保持极低的失真度。该产品通过EASE模拟声场分析优化，波导设计精巧，能提供完美的声场均匀度。坚固的桦木夹板箱体配合防水聚脲喷漆，确保在各种严苛的户外演出环境下依然表现卓越稳定。",
+        "tags": [
+            "钕磁单元",
+            "双10寸",
+            "高声压级"
+        ],
+        "specs": {
+            "description": "Line Array Speaker 线阵音箱",
+            "configuration": "2×10\", 2-Way 双10寸, 2分频",
+            "driversLF": "2×10\" 75芯 钕磁低音喇叭",
+            "driversHF": "2×1.4\" 75芯 钕磁高音喇叭",
+            "freqRange": "80Hz-16kHz",
+            "sensitivity": "101/111dB (f>100Hz)",
+            "maxSpl": "135/140dB",
+            "nominalImp": "8+8Ω",
+            "contPower": "600W+220W/2400W+880W",
+            "recAmp": "1000W-1500W",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Waterproof Polyurea Paint 聚脲防水漆",
+            "dimension": "616×594×285mm",
+            "weight": "25kg"
+        }
+    },
+    {
+        "id": 4,
+        "name": "VK212 线阵音箱",
+        "category": "音箱",
+        "subCategory": "VK系列 线阵系统",
+        "size": "双12英寸",
+        "power": "700W",
+        "imp": "16+16Ω",
+        "freq": "80Hz-16kHz",
+        "image": "📢",
+        "desc": "VK212是该系列中的旗舰三分频线阵产品，搭载双12寸低音、双10寸中音以及双1寸高音驱动器。通过Bi-amp驱动模式，能实现极为细腻的频率响应与强大的动态范围。其高密度波导设计与三点式吊挂结构，使其成为体育场馆、大剧院等顶级专业扩声工程的首选，提供如丝般顺滑的高频与厚实的低频表现。",
+        "tags": [
+            "三分频",
+            "双12寸",
+            "大型系统"
+        ],
+        "specs": {
+            "description": "Line Array Speaker 线阵音箱",
+            "configuration": "2×12\", Bi-amp 3-Way 双12寸, 两路3分频",
+            "driversLF": "2×12\" 75芯 钕磁低音喇叭",
+            "driversMF": "2×10\" 65芯 钕磁中音喇叭",
+            "driversHF": "2×1\" 44芯 钕磁高音喇叭",
+            "freqRange": "80Hz-16kHz",
+            "sensitivity": "100/102dB (f>100Hz)",
+            "maxSpl": "134/135dB",
+            "nominalImp": "16+16Ω",
+            "contPower": "700W+500W/2800W+2000W",
+            "recAmp": "1000W-2000W",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Waterproof Polyurea Paint 聚脲防水漆",
+            "dimension": "1000×620×340mm",
+            "weight": "60kg"
+        }
+    },
+    {
+        "id": 5,
+        "name": "VK218S 低音炮",
+        "category": "音箱",
+        "subCategory": "VK系列 低音系统",
+        "size": "双18英寸",
+        "power": "1200W",
+        "imp": "4Ω",
+        "freq": "38Hz-250Hz",
+        "image": "🎸",
+        "desc": "VK218S是一款高功率双18英寸超低音音箱，采用双100芯低音单元。其频率响应下潜至38Hz，能够提供深沉且极具冲击力的低音支持。箱体结构经过声学强化，有效减少大功率下的谐振。作为VK线阵系统的完美搭档，它不仅能提升系统的整体动态范围，更在户外大型电音节、音乐会中展现出无与伦比的低频统治力。",
+        "tags": [
+            "双18寸",
+            "超低音",
+            "大功率"
+        ],
+        "specs": {
+            "description": "Subwoofer 低音炮",
+            "configuration": "2×18\", 1-Way 双18寸, 1分频",
+            "driversLF": "2×18\" 100芯 低音喇叭",
+            "freqRange": "38Hz-250Hz",
+            "sensitivity": "102dB (f>100Hz)",
+            "maxSpl": "138dB",
+            "nominalImp": "4Ω",
+            "contPower": "1200W/4800W",
+            "recAmp": "1200W-1500W",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Waterproof Polyurea Paint 聚脲防水漆",
+            "dimension": "700×1200×550mm",
+            "weight": "71kg"
+        }
+    },
+    {
+        "id": 6,
+        "name": "E-LY212 Nezha系列线阵音箱",
+        "category": "音箱",
+        "subCategory": "Nezha系列",
+        "size": "双12英寸",
+        "power": "800W",
+        "imp": "8+8Ω",
+        "freq": "80Hz-18kHz",
+        "image": "⚡",
+        "desc": "Nezha系列E-LY212采用双极对称布置的双12寸低频单元与双75芯高频压缩驱动器，配备先进的声透镜波导装置，确保声场覆盖均匀。其低音反射式气口设计极大地还原了低频响应，使得音质厚实有力。箱体侧面与底部均配有人性化的嵌入式把手，配合硬质金属网罩，专为高强度巡回演出和固定安装设计。",
+        "tags": [
+            "哪吒系列",
+            "声透镜",
+            "双12寸"
+        ],
+        "specs": {
+            "description": "Line Array Speaker 线阵音箱",
+            "configuration": "2×12\", 2-Way 双12寸, 2分频",
+            "driversLF": "2×12\" 75芯 钕磁低音喇叭",
+            "driversHF": "2×1.4\" 75芯 钕磁高音喇叭",
+            "freqRange": "80Hz-18kHz",
+            "sensitivity": "LF:100dB HF:108dB",
+            "maxSpl": "LF:133dB HF:1136dB",
+            "nominalImp": "LF:8 ohm HF:8 ohm",
+            "contPower": "800W+160W / 2400W+640W",
+            "recAmp": "1200W-1500W",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "925×634×375mm",
+            "weight": "58kg"
+        }
+    },
+    {
+        "id": 7,
+        "name": "GL206 线阵音箱",
+        "category": "音箱",
+        "subCategory": "GL系列",
+        "size": "双6英寸",
+        "power": "300W",
+        "imp": "16Ω",
+        "freq": "120Hz-18kHz",
+        "image": "🎼",
+        "desc": "GL系列GL206是一款极其紧凑的线阵音箱，核心优势在于高灵敏度高音驱动器配合专用声波修正模块，将高频偏离角严格控制在10度。其内置无源2分频及16欧姆高阻抗设计，使单通道功放即可驱动4只音箱，极大地优化了系统成本与布线复杂性。配有快速插销吊挂系统，适合各类小型演出与多功能厅。",
+        "tags": [
+            "高阻抗",
+            "紧凑型",
+            "快速吊挂"
+        ],
+        "specs": {
+            "description": "Line Array Speaker 线阵音箱",
+            "configuration": "2×6\", 2-way, Built in Crossover",
+            "driversLF": "2×6\" 38芯 低音喇叭",
+            "driversHF": "34芯 高音喇叭",
+            "freqRange": "120Hz-18kHz",
+            "sensitivity": "99dB",
+            "maxSpl": "124dB",
+            "nominalImp": "16Ω",
+            "contPower": "300W / 600W",
+            "recAmp": "400W-600W",
+            "enclosure": "High Quality Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "510×332×193mm",
+            "weight": "15kg"
+        }
+    },
+    {
+        "id": 8,
+        "name": "GL12S-DSP 有源线阵次低音",
+        "category": "音箱",
+        "subCategory": "GL系列 有源线阵超低音",
+        "size": "12英寸",
+        "power": "2x800W",
+        "imp": "N/A",
+        "freq": "50Hz-200Hz",
+        "image": "🔊",
+        "desc": "GL12S-DSP是一款紧凑型直接发射式设计的有源超低频音箱，采用导相孔反射式箱体设计，极大优化了安装高度。内置高性能双通道大功率D类数字功放，配备带PFC的全球通用电源。集成DSP处理器，支持USB、网络控制及可选Dante接口。全铝合金快速吊挂系统，可与GL206组成高效的6寸有源线阵列系统。",
+        "tags": [
+            "有源超低音",
+            "DSP处理",
+            "Dante可选",
+            "直接发射式"
+        ],
+        "specs": {
+            "description": "Activce Line Array Subwoofer 有源线阵次低",
+            "configuration": "1x12\", 1-way 单12寸，1分频",
+            "driversLF": "LF-75mm(3\") Voice Coil 1x12\" 75芯低音喇叭",
+            "driversHF": "N/A",
+            "freqRange": "50Hz-200Hz",
+            "sensitivity": "N/A",
+            "maxSpl": "95dB",
+            "nominalImp": "N/A",
+            "contPower": "2x800W@8ohm",
+            "recAmp": "内置Class-D功放",
+            "enclosure": "铝合金挂挂系统",
+            "finish": "N/A",
+            "dimension": "510x464x350mm",
+            "weight": "30kg"
+        }
+    },
+    {
+        "id": 9,
+        "name": "GL15S-DSP 有源线阵次低音",
+        "category": "音箱",
+        "subCategory": "GL系列 有源线阵超低音",
+        "size": "15英寸",
+        "power": "2x1200W",
+        "imp": "N/A",
+        "freq": "50Hz-200Hz",
+        "image": "🔊",
+        "desc": "GL15S-DSP专为匹配GL208线阵列设计，采用15英寸大功率驱动单元。内置高性能双通道Class D功放模块，提供充沛的动力储备。系统集成先进的DSP数字信号处理技术，支持网络远程监控。箱体设计注重声学效率与体积平衡，配合全铝合金吊装件，能够快速搭建起具备强劲低频延伸的专业扩声系统。",
+        "tags": [
+            "15寸低音",
+            "大功率功放",
+            "数字音频处理",
+            "快速挂吊"
+        ],
+        "specs": {
+            "description": "Activce Line Array Subwoofer 有源线阵次低",
+            "configuration": "1x15\", 1-way 单15寸，1分频",
+            "driversLF": "LF-91mm(3.5\") Voice Coil 1x15\" 91芯低音喇叭",
+            "driversHF": "N/A",
+            "freqRange": "50Hz-200Hz",
+            "sensitivity": "N/A",
+            "maxSpl": "97dB",
+            "nominalImp": "N/A",
+            "contPower": "2x1200W@8ohm",
+            "recAmp": "内置Class-D功放",
+            "enclosure": "铝合金挂挂系统",
+            "finish": "N/A",
+            "dimension": "590x520x440mm",
+            "weight": "35kg"
+        }
+    },
+    {
+        "id": 10,
+        "name": "GL18S-DSP 有源线阵次低音",
+        "category": "音箱",
+        "subCategory": "GL系列 有源线阵超低音",
+        "size": "18英寸",
+        "power": "2x1200W",
+        "imp": "N/A",
+        "freq": "42Hz-200Hz",
+        "image": "🔊",
+        "desc": "GL18S-DSP是GL系列中功率最大的超低音单元，搭载18英寸100芯低音喇叭，下限频率可达42Hz。内置2x1200W大功率功放及专业级DSP芯片，支持精准的分频、均衡及限幅调节。配备彩色显示屏方便现场参数监控。该型号完美匹配GL210线阵列，是大规模演出及高端安装工程中提供强劲超低频能量的核心组件。",
+        "tags": [
+            "18寸超低音",
+            "100芯音圈",
+            "高性能DSP",
+            "巡演级设计"
+        ],
+        "specs": {
+            "description": "Activce Line Array Subwoofer 有源线阵次低",
+            "configuration": "1x18\", 1-way 单18寸，1分频",
+            "driversLF": "LF-100mm(4\") Voice Coil 1x18\" 100芯低音喇叭",
+            "driversHF": "N/A",
+            "freqRange": "42Hz-200Hz",
+            "sensitivity": "N/A",
+            "maxSpl": "97dB",
+            "nominalImp": "N/A",
+            "contPower": "2x1200W@8ohm",
+            "recAmp": "内置Class-D功放",
+            "enclosure": "铝合金挂挂系统",
+            "finish": "N/A",
+            "dimension": "710x582x500mm",
+            "weight": "42kg"
+        }
+    },
+    {
+        "id": 11,
+        "name": "VKX210L-DSP 双10寸有源线阵列音箱",
+        "category": "音箱",
+        "subCategory": "VKX系列 线阵系统",
+        "size": "双10英寸",
+        "power": "2x500W",
+        "imp": "N/A",
+        "freq": "80Hz-18kHz",
+        "image": "🎙️",
+        "desc": "VKX210L-DSP是一款集成了网络接口的紧凑型2路2分频有源线阵音箱。采用两个1英寸44mm音圈压缩驱动器及两个10英寸65mm音圈低音单元。内置双通道500W Class D功放和高性能DSP处理器，支持USB与TCP/IP远程控制监控。箱体由优质桦木夹板制造，外喷高硬度耐磨漆，专为高标准线性声源需求设计。",
+        "tags": [
+            "双10寸",
+            "有源线阵",
+            "网络监控",
+            "桦木夹板"
+        ],
+        "specs": {
+            "description": "Active Line Array Speaker 有源线阵音箱",
+            "configuration": "2x10\"+2x1\" 2路分频",
+            "driversLF": "2x10\" 156mm磁体, 65mm音圈",
+            "driversHF": "2x1\" 44mm音圈压缩驱动单元",
+            "freqRange": "80Hz-18kHz",
+            "sensitivity": "N/A",
+            "maxSpl": "126dB",
+            "nominalImp": "N/A",
+            "contPower": "2x500W (Class-D)",
+            "recAmp": "内置",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性耐磨漆",
+            "dimension": "580x580x285mm",
+            "weight": "28kg"
+        }
+    },
+    {
+        "id": 12,
+        "name": "VKX1018L-DSP 有源线阵次低音",
+        "category": "音箱",
+        "subCategory": "VKX系列 线阵系统",
+        "size": "18英寸",
+        "power": "1x1000W",
+        "imp": "N/A",
+        "freq": "38Hz-250Hz",
+        "image": "📻",
+        "desc": "VKX1018L-DSP是VKX系列配套的18英寸有源超低音音箱，搭载220mm大磁钢100mm音圈单元。内置1000W单通道Class D功放模块，低频下潜至38Hz。通过内置DSP可进行精细化声学调节，并支持与全频单元同步网络化管理。采用坚固的桦木夹板箱体与专业吊挂系统，确保巡演应用中的高可靠性与强劲低音表现。",
+        "tags": [
+            "18寸低音",
+            "1000W功率",
+            "DSP联动",
+            "次低频扩展"
+        ],
+        "specs": {
+            "description": "Active Line Array Subwoofer 有源线阵次低音",
+            "configuration": "1x18\" 单18寸",
+            "driversLF": "1x18\" 220mm铁氧体磁体, 100mm音圈",
+            "driversHF": "N/A",
+            "freqRange": "38Hz-250Hz",
+            "sensitivity": "N/A",
+            "maxSpl": "131dB",
+            "nominalImp": "N/A",
+            "contPower": "1x1000W (Class-D)",
+            "recAmp": "内置",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "580x580x285mm",
+            "weight": "48kg"
+        }
+    },
+    {
+        "id": 13,
+        "name": "RX-110 娱乐专业音箱",
+        "category": "音箱",
+        "subCategory": "RX系列 无源专业音箱",
+        "size": "10英寸",
+        "power": "250W/1000W",
+        "imp": "8Ω",
+        "freq": "60Hz-19kHz",
+        "image": "🎵",
+        "desc": "RX-110是一款运用先进电声理念开发的10英寸2分频娱乐专业音箱。搭载定制的精密分频器，实现频率间的平滑过渡，音色细腻且密度感强。采用桦木夹板箱体配合耐磨喷漆工艺，专为追求高还原度和极致听感的商业娱乐场所打造，在极高声压级下依然能保持较低的失真率和优异的覆盖稳定性。",
+        "tags": [
+            "10寸娱乐音箱",
+            "桦木夹板",
+            "精密分频",
+            "高保真"
+        ],
+        "specs": {
+            "description": "Entertainment Speaker 娱乐箱",
+            "configuration": "1x10\", 2-way 单10寸，2分频",
+            "driversLF": "1x10\" 低音喇叭 (44mm音圈)",
+            "driversHF": "1x1.75\" 高音喇叭 (44芯音圈)",
+            "freqRange": "60Hz-19kHz",
+            "sensitivity": "95dB",
+            "maxSpl": "119dB",
+            "nominalImp": "8Ω",
+            "contPower": "250W/1000W",
+            "recAmp": "300W-500W",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "黑色水性漆",
+            "dimension": "310x360x520mm",
+            "weight": "19kg"
+        }
+    },
+    {
+        "id": 14,
+        "name": "RX-112 娱乐专业音箱",
+        "category": "音箱",
+        "subCategory": "RX系列 无源专业音箱",
+        "size": "12英寸",
+        "power": "350W/1400W",
+        "imp": "8Ω",
+        "freq": "55Hz-19kHz",
+        "image": "🎹",
+        "desc": "RX-112作为RX系列的主力12英寸型号，兼顾了低频的饱满度与中高频的清晰度。其2路2分频设计配合高效的换能器，能够输出高达122dB的最大声压级。箱体采用耐用的桦木夹板，内部加强筋设计减少了谐振。推荐配合500W左右功放使用，是KTV、酒吧及各类中小型娱乐表演空间的理想选择。",
+        "tags": [
+            "12寸全频",
+            "高声压",
+            "娱乐扩声",
+            "专业无源"
+        ],
+        "specs": {
+            "description": "Entertainment Speaker 娱乐箱",
+            "configuration": "1x12\", 2-way 单12寸，2分频",
+            "driversLF": "1x12\" 低音喇叭 (44mm音圈)",
+            "driversHF": "1x1.75\" 高音喇叭 (44芯音圈)",
+            "freqRange": "55Hz-19kHz",
+            "sensitivity": "97dB",
+            "maxSpl": "122dB",
+            "nominalImp": "8Ω",
+            "contPower": "350W/1400W",
+            "recAmp": "500W",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "黑色水性漆",
+            "dimension": "360x420x590mm",
+            "weight": "22kg"
+        }
+    },
+    {
+        "id": 15,
+        "name": "RX-115 娱乐专业音箱",
+        "category": "音箱",
+        "subCategory": "RX系列 无源专业音箱",
+        "size": "15英寸",
+        "power": "400W/1600W",
+        "imp": "8Ω",
+        "freq": "45Hz-19kHz",
+        "image": "🎸",
+        "desc": "RX-115是一款高性能的15英寸无源全频音箱，强化了中低频的下潜和动态表现，低频响应可延伸至45Hz。采用高品质75mm音圈低音单元和44芯高音单元，提供卓越的清晰度和穿透力。该音箱在保持专业声学性能的同时，也注重外观的工艺美学，是大型娱乐厅和多功能厅扩声系统的强力支撑。",
+        "tags": [
+            "15寸全频",
+            "宽频响",
+            "桦木箱体",
+            "高灵敏度"
+        ],
+        "specs": {
+            "description": "Entertainment Speaker 娱乐箱",
+            "configuration": "1x15\", 2-way 单15寸，2分频",
+            "driversLF": "1x15\" 低音喇叭 (75mm音圈)",
+            "driversHF": "1x1.75\" 高音喇叭 (44芯音圈)",
+            "freqRange": "45Hz-19kHz",
+            "sensitivity": "98dB",
+            "maxSpl": "124dB",
+            "nominalImp": "8Ω",
+            "contPower": "400W/1600W",
+            "recAmp": "500W-1000W",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "黑色水性漆",
+            "dimension": "440x435x700mm",
+            "weight": "31kg"
+        }
+    },
+    {
+        "id": 16,
+        "name": "RX-210 娱乐专业音箱",
+        "category": "音箱",
+        "subCategory": "RX系列 无源专业音箱",
+        "size": "双10英寸",
+        "power": "300W/1200W",
+        "imp": "4Ω",
+        "freq": "45Hz-20kHz",
+        "image": "🎤",
+        "desc": "RX-210采用双10英寸低频单元与3分频设计，旨在提供更丰富的层次感和极佳的人声还原度。紧凑的箱体结构内藏精密的分频网络，确保两个10寸单元与高音单元完美衔接。高密度板箱体配合专业结构加固，减少了大动态下的箱体音染。4Ω的标称阻抗设计，能更有效地利用功放输出，适合各类高端娱乐应用。",
+        "tags": [
+            "双10寸",
+            "3分频",
+            "高密度板",
+            "极致还原"
+        ],
+        "specs": {
+            "description": "Entertainment Speaker 娱乐箱",
+            "configuration": "2x10\", 3-way 双10寸，3分频",
+            "driversLF": "2x10\" 低音喇叭",
+            "driversHF": "2x3\", 1x1.75\" 高音喇叭",
+            "freqRange": "45Hz-20kHz",
+            "sensitivity": "98dB",
+            "maxSpl": "123dB",
+            "nominalImp": "4Ω",
+            "contPower": "300W/1200W",
+            "recAmp": "450W",
+            "enclosure": "High Density Board 高密度板",
+            "finish": "黑色水性漆",
+            "dimension": "375x395x600mm",
+            "weight": "42kg"
+        }
+    },
+    {
+        "id": 17,
+        "name": "RX-215 娱乐专业音箱",
+        "category": "音箱",
+        "subCategory": "RX系列 无源专业音箱",
+        "size": "双15英寸",
+        "power": "800W/3200W",
+        "imp": "4Ω",
+        "freq": "40Hz-18kHz",
+        "image": "🔊",
+        "desc": "RX-215是RX系列的旗舰型号，采用双15英寸大功率低音驱动单元，峰值功率高达3200W。具备震撼的低频声压输出和极宽的动态范围，低频下限达40Hz。采用优质桦木夹板打造的巨型箱体，确保在高能量输出下的机械稳定性。该型号专为大型场馆、迪厅及需要超大能量覆盖的专业环境设计。",
+        "tags": [
+            "双15寸",
+            "旗舰级功率",
+            "大动态",
+            "舞台应用"
+        ],
+        "specs": {
+            "description": "Entertainment Speaker 娱乐箱",
+            "configuration": "2x15\", 2-way 双15寸，2分频",
+            "driversLF": "2x15\" 低音喇叭",
+            "driversHF": "1x1.75\" 高音喇叭 (75芯音圈)",
+            "freqRange": "40Hz-18kHz",
+            "sensitivity": "100dB",
+            "maxSpl": "129dB",
+            "nominalImp": "4Ω",
+            "contPower": "800W/3200W",
+            "recAmp": "1000W",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "黑色水性漆",
+            "dimension": "500x520x1240mm",
+            "weight": "59kg"
+        }
+    },
+    {
+        "id": 18,
+        "name": "GF-15 专业全频音箱",
+        "category": "音箱",
+        "subCategory": "GF系列",
+        "size": "15英寸",
+        "power": "450W",
+        "imp": "8Ω",
+        "freq": "50Hz-18kHz",
+        "image": "🔊",
+        "desc": "GF系列是全多功能音箱系列之一，采用高强度桦木夹板结合入槽锁结工艺，箱体结构异常坚固耐用。GF-15内置科学的分频点，在保障单元稳定运行的同时，提供均匀通透、清晰细腻的音质。其拥有充沛的额定功率与高达130dB的最大声压级，能够满足现场演出、酒吧、多功能厅等多种专业扩声场景的需求，音色表现完美且极具可靠性。",
+        "tags": [
+            "多功能",
+            "专业扩声",
+            "桦木夹板"
+        ],
+        "specs": {
+            "description": "Loudspeaker 音箱",
+            "configuration": "1×15\", 2-way 单15, 2分频",
+            "driversLF": "381 mm (15\") driver 低音喇叭",
+            "driversHF": "44 mm voice coil 高音喇叭",
+            "freqRange": "50Hz-18kHz(±3dB)",
+            "sensitivity": "97dB",
+            "maxSpl": "130dB",
+            "nominalImp": "8Ω",
+            "contPower": "450W/1800W",
+            "recAmp": "800W",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "429×480×708mm",
+            "weight": "29kg"
+        }
+    },
+    {
+        "id": 19,
+        "name": "GF-218B 超低频扬声器",
+        "category": "音箱",
+        "subCategory": "GF系列",
+        "size": "18英寸×2",
+        "power": "1200W",
+        "imp": "4Ω",
+        "freq": "32Hz-200Hz",
+        "image": "🌑",
+        "desc": "GF-218B是一款高性能的双18英寸超低频音箱，专门设计用于增强大型音响系统的低频下限。采用桦木夹板箱体，坚固的结构确保在高功率输出下依然保持极低的失真。其额定功率达到1200W，最大声压级可达142dB，低音深沉且具有极强的冲击力，是娱乐场所、剧场和室外演出的理想低频解决方案。",
+        "tags": [
+            "超低音",
+            "双18寸",
+            "大功率"
+        ],
+        "specs": {
+            "description": "Subwoofer 超低频扬声器",
+            "configuration": "2×18\", 1-way 双18, 1分频",
+            "driversLF": "457 mm (18\") driver 低音喇叭",
+            "driversHF": "N/A",
+            "freqRange": "32Hz-200Hz(±3dB)",
+            "sensitivity": "102dB",
+            "maxSpl": "142dB",
+            "nominalImp": "4Ω",
+            "contPower": "1200W/4800W",
+            "recAmp": "1200W",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "1230×693×575mm",
+            "weight": "88kg"
+        }
+    },
+    {
+        "id": 20,
+        "name": "TX-12 专业音箱",
+        "category": "音箱",
+        "subCategory": "TX系列",
+        "size": "12英寸",
+        "power": "400W",
+        "imp": "8Ω",
+        "freq": "55Hz-18kHz",
+        "image": "📻",
+        "desc": "TX系列旨在以合理的预算提供卓越的灵敏度、频率响应和功率处理能力。TX-12采用高密度纤维板结合入槽锁结工艺，箱体表面覆盖黑色水性漆，坚固耐磨。它能够为音乐人、DJ、教堂及公共场合提供清晰且具有穿透力的音质，无论是固定安装在学校、俱乐部，还是作为移动音响系统，都能表现出良好的平衡性和语言清晰度。",
+        "tags": [
+            "高性价比",
+            "高密度板",
+            "固定安装"
+        ],
+        "specs": {
+            "description": "Loudspeaker 音箱",
+            "configuration": "1×12\", 2-way 单12, 2分频",
+            "driversLF": "305 mm (12\") driver 低音喇叭",
+            "driversHF": "44 mm voice coil 高音喇叭",
+            "freqRange": "55Hz-18kHz(±3dB)",
+            "sensitivity": "95dB",
+            "maxSpl": "127dB",
+            "nominalImp": "8Ω",
+            "contPower": "400W/1600W",
+            "recAmp": "600W",
+            "enclosure": "High Density Board 高密度板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "380×486×624mm",
+            "weight": "26kg"
+        }
+    },
+    {
+        "id": 21,
+        "name": "VS-8015 专业音箱",
+        "category": "音箱",
+        "subCategory": "VS系列",
+        "size": "15英寸",
+        "power": "300W",
+        "imp": "8Ω",
+        "freq": "75Hz-20kHz",
+        "image": "🎶",
+        "desc": "VS系列是紧凑型全频音箱系列，旨在满足对性价比有极高要求的安装与巡演需求。VS-8015采用15英寸低音单元结合34mm芯高音，整体音色平衡度高。箱体采用高密度板制造，轻便且结构紧凑，非常适合迪厅、咖啡厅、餐厅及多功能礼堂等需要均匀覆盖和卓越语音清晰度的场所，是一款极为灵活的扩声工具。",
+        "tags": [
+            "紧凑型",
+            "性价比",
+            "背景音乐"
+        ],
+        "specs": {
+            "description": "Loudspeaker 音箱",
+            "configuration": "1×15\", 2-way 单15, 2分频",
+            "driversLF": "381 mm (15\") driver 低音喇叭",
+            "driversHF": "34 mm voice coil 高音喇叭",
+            "freqRange": "75Hz-20kHz(±3dB)",
+            "sensitivity": "95dB",
+            "maxSpl": "126dB",
+            "nominalImp": "8Ω",
+            "contPower": "300W/1200W",
+            "recAmp": "600W",
+            "enclosure": "High Density Board 高密度板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "438×470×710mm",
+            "weight": "29kg"
+        }
+    },
+    {
+        "id": 22,
+        "name": "POW-825 专业音箱",
+        "category": "音箱",
+        "subCategory": "POW系列",
+        "size": "15英寸×2",
+        "power": "1000W",
+        "imp": "4Ω",
+        "freq": "40Hz-20kHz",
+        "image": "📢",
+        "desc": "POW-825是一款中远距离投射的三分频双15英寸全频音箱。为了提升声压穿透力和安装便利性，其号角与箱体经过了精密声学计算。中高音表现异常强劲，最大声压级可达134dB。其采用桦木夹板箱体，能产生极其饱满且具有爆发力的低频，是户外表演、大型场馆扩声及各类对声压要求极高场合的首选设备。",
+        "tags": [
+            "三分频",
+            "双15寸",
+            "远程投射"
+        ],
+        "specs": {
+            "description": "Loudspeaker 音箱",
+            "configuration": "2×15\", 3-way 双15寸, 3分频",
+            "driversLF": "2×15\" 低音喇叭",
+            "driversHF": "1×2.85\" 高音喇叭",
+            "freqRange": "40Hz-20kHz",
+            "sensitivity": "104dB",
+            "maxSpl": "134dB",
+            "nominalImp": "4Ω",
+            "contPower": "1000W / 3200W",
+            "recAmp": "1500W",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "500×600×1310mm",
+            "weight": "69kg"
+        }
+    },
+    {
+        "id": 23,
+        "name": "POW-221B 超低音炮",
+        "category": "音箱",
+        "subCategory": "POW系列",
+        "size": "21英寸×2",
+        "power": "2400W",
+        "imp": "4Ω",
+        "freq": "30Hz-200Hz",
+        "image": "📦",
+        "desc": "POW-221B 是一款顶级的双21英寸超低音炮。其核心是两个全新设计的21英寸长冲程大功率驱动器，拥有135mm超大直径音圈。采用复杂的号角结构设计，确保低频具有超长投射距离和极高的效率，最大声压级惊人。 birch plywood材质的加强箱体保证了在大动态输出时的稳定性，是大型户外巡演系统震撼低频的核心支撑。",
+        "tags": [
+            "双21寸",
+            "极致低音",
+            "巡演级"
+        ],
+        "specs": {
+            "description": "Subwoofer 低音炮",
+            "configuration": "2×21\", 1-way 双21寸, 1分频",
+            "driversLF": "2×21\" 低音喇叭",
+            "driversHF": "N/A",
+            "freqRange": "30Hz-200Hz",
+            "sensitivity": "106dB",
+            "maxSpl": "142dB",
+            "nominalImp": "4Ω",
+            "contPower": "2400W / 8000W",
+            "recAmp": "2600W",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "1300×905×628mm",
+            "weight": "130kg"
+        }
+    },
+    {
+        "id": 24,
+        "name": "POW-126 专业全频音箱",
+        "category": "音箱",
+        "subCategory": "POW系列",
+        "size": "15英寸",
+        "power": "450W",
+        "imp": "8Ω",
+        "freq": "40Hz-18kHz",
+        "image": "🔊",
+        "desc": "POW系列是专为户外中远距离设计的扩声系统，具备高声压级、远射程及大功率等特点。POW-126采用定制的高性能15英寸低频单元与高频驱动器，通过精准计算的内置分频器提供极佳的相位一致性。箱体选用优质桦木夹板，表面覆盖黑色耐磨水性漆。高声压输出配合极强的声音穿透力，是户外流动演出、体育场馆扩声的理想选择。",
+        "tags": [
+            "专业扩声",
+            "远射程",
+            "桦木夹板"
+        ],
+        "specs": {
+            "description": "Loudspeaker 音箱",
+            "configuration": "1×15\", 3-way 单15, 3分频",
+            "driversLF": "1×15\" 低音喇叭",
+            "driversHF": "1×2.85\" 高音喇叭",
+            "freqRange": "40Hz-18KHz",
+            "sensitivity": "98dB",
+            "maxSpl": "128dB",
+            "nominalImp": "8Ω",
+            "contPower": "450W/1800W",
+            "recAmp": "700W",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "548×592×920mm",
+            "weight": "56kg"
+        }
+    },
+    {
+        "id": 25,
+        "name": "POW-18S 专业超低频音箱",
+        "category": "音箱",
+        "subCategory": "POW系列",
+        "size": "18英寸",
+        "power": "500W",
+        "imp": "8Ω",
+        "freq": "40Hz-200Hz",
+        "image": "🌑",
+        "desc": "POW-18S是一款高性能的18英寸超低频音箱，专为提升扩声系统的低频下潜和冲击力而设计。其低频单元具有极高的耐受力和动态范围，能够产生震撼人心的超低音效果。箱体结构经过声学优化，采用高强度的桦木夹板制造，能有效抑制谐振。外观统一采用专业级黑色喷涂，与POW系列全频音箱配合使用时可显著增强整体音质表现。",
+        "tags": [
+            "超低音",
+            "大动态",
+            "低频补声"
+        ],
+        "specs": {
+            "description": "Subwoofer 超低频扬声器",
+            "configuration": "1×18\", 1-way 单18, 1分频",
+            "driversLF": "1×18\" 低音喇叭",
+            "driversHF": "N/A",
+            "freqRange": "40Hz-200Hz",
+            "sensitivity": "102dB",
+            "maxSpl": "136dB",
+            "nominalImp": "8Ω",
+            "contPower": "500W/2000W",
+            "recAmp": "1000W",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "580×762×488mm",
+            "weight": "42kg"
+        }
+    },
+    {
+        "id": 26,
+        "name": "POW-228 专业全频音箱",
+        "category": "音箱",
+        "subCategory": "POW系列",
+        "size": "15英寸x2",
+        "power": "900W",
+        "imp": "4Ω",
+        "freq": "40Hz-20KHz",
+        "image": "📢",
+        "desc": "POW-228是一款双15英寸三分频专业音箱，拥有更强大的声压级输出能力和更宽阔的动态范围。针对大面积场所设计，其双15寸单元配置提供了充沛的低音能量，而中高频单元则保证了语音清晰度与音乐细节的还原。采用高密度板材加固设计，搭配耐磨水性漆处理，适应高强度的流动演出和固定安装需求，是大型活动扩声的核心主力。",
+        "tags": [
+            "双15寸",
+            "三分频",
+            "高能量输出"
+        ],
+        "specs": {
+            "description": "Loudspeaker 音箱",
+            "configuration": "2×15\", 3-way 双15, 3分频",
+            "driversLF": "2×15\" 低音喇叭",
+            "driversHF": "1×1.75\" 高音喇叭",
+            "freqRange": "40Hz-20KHz",
+            "sensitivity": "102dB",
+            "maxSpl": "136dB",
+            "nominalImp": "4Ω",
+            "contPower": "900W/3200W",
+            "recAmp": "1350W",
+            "enclosure": "High Density Board 高密度板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "550×600×1324mm",
+            "weight": "69kg"
+        }
+    },
+    {
+        "id": 27,
+        "name": "NB-1003 KTV包房音箱",
+        "category": "音箱",
+        "subCategory": "NB系列",
+        "size": "10英寸",
+        "power": "200W",
+        "imp": "8Ω",
+        "freq": "60Hz-20KHz",
+        "image": "🎤",
+        "desc": "NB系列是专为KTV娱乐场所量身打造的专业音箱。NB-1003采用10英寸高功率低音单元，其高音自然圆润，中频清晰柔和，整体音质细腻且具有极强的包围感。频响范围极宽，能完美展现人声细节，是KTV会所唱歌的理想之选。箱体采用高密度板材，工艺精湛，外观时尚且耐磨，能够适应包房内长时间高负荷的运作环境。",
+        "tags": [
+            "KTV专用",
+            "人声细腻",
+            "娱乐扩声"
+        ],
+        "specs": {
+            "description": "KTV Speaker KTV音箱",
+            "configuration": "1×10\", 3-way 单10寸, 3分频",
+            "driversLF": "1×10\" 低音喇叭",
+            "driversMF": "2×4.5\" 中音喇叭",
+            "driversHF": "2×2.5\" 高音喇叭",
+            "freqRange": "60Hz-20KHz",
+            "sensitivity": "94dB",
+            "maxSpl": "115dB",
+            "nominalImp": "8Ω",
+            "contPower": "200W/600W",
+            "recAmp": "250W",
+            "enclosure": "High Density Board 高密度板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "512×277×305mm",
+            "weight": "12kg"
+        }
+    },
+    {
+        "id": 28,
+        "name": "K-8 KTV包房音箱",
+        "category": "音箱",
+        "subCategory": "K系列",
+        "size": "8英寸",
+        "power": "150W",
+        "imp": "8Ω",
+        "freq": "45Hz-20KHz",
+        "image": "📻",
+        "desc": "K系列是为两分频全频KTV包房设计的紧凑型音箱，集高保真还原与高性价比于一身。K-8采用8英寸低音单元配合双3英寸高音单元，声场表现柔和清晰且穿透力强。其箱体结构设计紧凑，便于在空间有限的包房内吊挂或摆放。该音箱专注于人声表现，具有极高的表现力，是中小型娱乐包房、私人影音室追求极致音质的经济型解决方案。",
+        "tags": [
+            "紧凑型",
+            "高性价比",
+            "双高音设计"
+        ],
+        "specs": {
+            "description": "KTV Speaker KTV音箱",
+            "configuration": "1×8\", 2-way 单8, 2分频",
+            "driversLF": "1×8\" 低音喇叭",
+            "driversHF": "2×3\", 13 mm voice coil 高音喇叭",
+            "freqRange": "45Hz-20KHz",
+            "sensitivity": "97dB",
+            "maxSpl": "118dB",
+            "nominalImp": "8Ω",
+            "contPower": "150W/600W",
+            "recAmp": "200W",
+            "enclosure": "High Density Board 高密度板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "265×452×252mm",
+            "weight": "8kg"
+        }
+    },
+    {
+        "id": 29,
+        "name": "AX-12DSP 有源多功能音箱",
+        "category": "音箱",
+        "subCategory": "AX系列",
+        "size": "12英寸",
+        "power": "250W",
+        "imp": "N/A",
+        "freq": "70Hz-18kHz",
+        "image": "🔋",
+        "desc": "AX-12DSP是一款内置DSP处理的专业有源音箱，集成了高效的D类功放模块。它融合了优雅的设计与卓越的声学性能，操作直觉且具有极高的可靠性。12英寸配置提供了均衡的高低频表现，非常适合中型舞台、剧院及流动演出。机身多处设有悬挂点，支持垂直或水平安装。其数字音频处理技术能确保在各种声场环境下都能输出纯净、真实的音质。",
+        "tags": [
+            "有源音箱",
+            "内置DSP",
+            "D类功放"
+        ],
+        "specs": {
+            "description": "Active Multi-function Speaker 有源多功能音箱",
+            "configuration": "1×12\", 2-way 单12, 2分频",
+            "driversLF": "1×12\" 低音喇叭",
+            "driversHF": "44 mm voice coil 高音喇叭",
+            "freqRange": "70Hz-18KHz",
+            "sensitivity": "96dB",
+            "maxSpl": "126dB",
+            "nominalImp": "N/A",
+            "contPower": "250W/1000W",
+            "recAmp": "内置功放 (LF 400W/HF 100W)",
+            "enclosure": "High Density Board 高密度板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "390×360×620mm",
+            "weight": "21kg"
+        }
+    },
+    {
+        "id": 30,
+        "name": "TX-12M-DSP 有源舞台监听音箱",
+        "category": "音箱",
+        "subCategory": "TX系列",
+        "size": "12英寸",
+        "power": "250W",
+        "imp": "N/A",
+        "freq": "70Hz-18KHz",
+        "image": "📐",
+        "desc": "TX-12M-DSP是专为舞台返送设计的专业有源监听音箱。其特殊的楔形箱体角度确保了完美的舞台近场覆盖，为表演者提供清晰、准确的参考声音。内置高性能D类双路功放和DSP处理器，能对频率响应进行精确校正，有效减少舞台反馈。坚固的箱体结构配合耐磨表面处理，能够经受舞台高频率使用的考验。是专业演出及各种扩声补充的卓越选择。",
+        "tags": [
+            "舞台返送",
+            "有源监听",
+            "DSP处理"
+        ],
+        "specs": {
+            "description": "Stage Monitor 舞台监听",
+            "configuration": "1×12\", 2-way 单12, 2分频",
+            "driversLF": "305 mm (12\") driver 低音喇叭",
+            "driversHF": "44 mm voice coil 44芯 高音喇叭",
+            "freqRange": "70Hz-18KHz(±3dB)",
+            "sensitivity": "96dB",
+            "maxSpl": "126dB",
+            "nominalImp": "N/A",
+            "contPower": "250W/1600W",
+            "recAmp": "内置功放 (LF 250W/HF 100W)",
+            "enclosure": "High Density Board 高密度板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "526×613×323mm",
+            "weight": "28kg"
+        }
+    },
+    {
+        "id": 31,
+        "name": "KL-10 娱乐后倒音箱",
+        "category": "音箱",
+        "subCategory": "KL系列",
+        "size": "10英寸",
+        "power": "200W",
+        "imp": "8Ω",
+        "freq": "70Hz-18kHz",
+        "image": "🔊",
+        "desc": "KL系列定位于中高端娱乐市场，采用现代生产工艺与时尚外观。其独特的后倒相双出设计，有效解决了KTV场所因无法安装超低音导致的低频不足问题。安装方式灵活，支持贴墙吊装或落地支杆安装，广泛适用于休闲酒吧、KTV、多功能厅、会议室及学校教室等扩声场景。",
+        "tags": [
+            "娱乐KTV",
+            "后倒相设计",
+            "多功能扩声"
+        ],
+        "specs": {
+            "description": "KTV Speaker 娱乐后倒音箱",
+            "configuration": "1×10\", 2-way 单10寸, 2分频",
+            "driversLF": "256 mm (10\") driver",
+            "driversHF": "HF-34 mm voice coil 34芯高音喇叭",
+            "freqRange": "70Hz-18kHz",
+            "sensitivity": "94dB",
+            "maxSpl": "117dB",
+            "nominalImp": "8Ω",
+            "contPower": "200W/800W",
+            "recAmp": "N/A",
+            "enclosure": "High Density Board 高密度板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "308×345×520mm",
+            "weight": "14.5"
+        }
+    },
+    {
+        "id": 32,
+        "name": "KL-12 娱乐后倒音箱",
+        "category": "音箱",
+        "subCategory": "KL系列",
+        "size": "12英寸",
+        "power": "300W",
+        "imp": "8Ω",
+        "freq": "65Hz-18kHz",
+        "image": "🔊",
+        "desc": "KL系列12寸型号，专为中高端娱乐场所设计。后倒相双出设计显著提升低频表现，弥补无超低音环境的频响缺陷。箱体结构紧凑，支持多样化安装方式。该产品在中频人声表现上尤为细腻，适合KTV包房及各类商业空间的音频强化。",
+        "tags": [
+            "KTV专供",
+            "强劲低频",
+            "灵活安装"
+        ],
+        "specs": {
+            "description": "KTV Speaker 娱乐后倒音箱",
+            "configuration": "1×12\", 2-way 单12寸, 2分频",
+            "driversLF": "304 mm (12\") driver",
+            "driversHF": "HF-44 mm voice coil 44芯高音喇叭",
+            "freqRange": "65Hz-18kHz",
+            "sensitivity": "96dB",
+            "maxSpl": "120dB",
+            "nominalImp": "8Ω",
+            "contPower": "300W/1200W",
+            "recAmp": "N/A",
+            "enclosure": "High Density Board 高密度板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "369×410×595mm",
+            "weight": "21"
+        }
+    },
+    {
+        "id": 33,
+        "name": "KL-4012 娱乐后倒音箱",
+        "category": "音箱",
+        "subCategory": "KL系列",
+        "size": "12英寸",
+        "power": "350W",
+        "imp": "8Ω",
+        "freq": "58Hz-18kHz",
+        "image": "📢",
+        "desc": "KL系列的高性能型号，采用高品质桦木夹板打造。相比标准版，其低频下潜更深至58Hz，功率提升至350W，声压级更高。适用于对音质和耐用度有更高要求的商业娱乐和专业扩声工程，提供更浑厚的低音和清晰的高音表现。",
+        "tags": [
+            "桦木夹板",
+            "大功率",
+            "专业娱乐"
+        ],
+        "specs": {
+            "description": "KTV Speaker 娱乐后倒音箱",
+            "configuration": "1×12\", 2-way 单12寸, 2分频",
+            "driversLF": "304 mm (12\") driver",
+            "driversHF": "HF-34 mm voice coil 34芯高音喇叭",
+            "freqRange": "58Hz-18kHz",
+            "sensitivity": "96dB",
+            "maxSpl": "121dB",
+            "nominalImp": "8Ω",
+            "contPower": "350W/1400W",
+            "recAmp": "N/A",
+            "enclosure": "High Quality Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "369×410×595mm",
+            "weight": "22"
+        }
+    },
+    {
+        "id": 34,
+        "name": "TR-12 高端专业演出音箱",
+        "category": "音箱",
+        "subCategory": "TR系列",
+        "size": "12英寸",
+        "power": "350W",
+        "imp": "8Ω",
+        "freq": "45Hz-19kHz",
+        "image": "🎼",
+        "desc": "TR系列是运用先进电声设计理念研发的高端扩声产品。EGT定制的分频器确保了频段间的无缝结合，声音密度高、平稳且细腻。采用桦木夹板及黑色水性漆工艺，具有极宽的频响范围和精准的覆盖角度，无论是动态响应还是极低失真率，均能满足专业演出市场需求。",
+        "tags": [
+            "专业演出",
+            "高保真",
+            "高端定制"
+        ],
+        "specs": {
+            "description": "Passive Speaker 专业演出箱",
+            "configuration": "1×12\", 2-way 单12寸, 2分频",
+            "driversLF": "304 mm (12\") driver",
+            "driversHF": "44 mm voice coil 44芯高音喇叭",
+            "freqRange": "45Hz-19kHz",
+            "sensitivity": "99dB",
+            "maxSpl": "129dB",
+            "nominalImp": "8Ω",
+            "contPower": "350W/1400W",
+            "recAmp": "N/A",
+            "enclosure": "High Quality Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "360×400×599mm",
+            "weight": "22"
+        }
+    },
+    {
+        "id": 35,
+        "name": "RX-112M 有源舞台监听音箱",
+        "category": "音箱",
+        "subCategory": "RX DSP系列",
+        "size": "12英寸",
+        "power": "350W",
+        "imp": "N/A",
+        "freq": "55Hz-19kHz",
+        "image": "🎤",
+        "desc": "RX系列是专为有源音箱需求设计的专业监听产品。内置Class D功放模块，结合精准的DSP处理，实现了卓越的音质和可靠性。箱体紧凑且易于携带，设有多个吊挂点，既适合舞台返听，也可应用于剧院、派对及各类固定安装场合，提供直接且真实的音频还原。",
+        "tags": [
+            "有源监听",
+            "DSP处理",
+            "D类功放"
+        ],
+        "specs": {
+            "description": "Active stage monitor 有源舞台监听",
+            "configuration": "1×12\", 2-way 单12, 2分频",
+            "driversLF": "1×12\" 低音喇叭",
+            "driversHF": "44 mm voice coil 44芯高音喇叭",
+            "freqRange": "55Hz-19kHz",
+            "sensitivity": "97dB",
+            "maxSpl": "122dB",
+            "nominalImp": "N/A",
+            "contPower": "350W/1400W",
+            "recAmp": "N/A",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "375×410×570mm",
+            "weight": "20"
+        }
+    },
+    {
+        "id": 36,
+        "name": "RX-115M 有源舞台监听音箱",
+        "category": "音箱",
+        "subCategory": "RX DSP系列",
+        "size": "15英寸",
+        "power": "400W",
+        "imp": "N/A",
+        "freq": "45Hz-19kHz",
+        "image": "🎶",
+        "desc": "RX-115M是该系列的大功率监听型号，搭载15寸低音单元，频响更宽广，低音更有力。采用桦木夹板制作，结构坚固，能应对高强度的流动演出和各种复杂的声场环境。其内置的电子分频和功率保护功能，确保了在大声压级下的纯净表现，是专业乐手和音响师的理想选择。",
+        "tags": [
+            "15寸监听",
+            "大动态",
+            "专业扩声"
+        ],
+        "specs": {
+            "description": "Active stage monitor 有源舞台监听",
+            "configuration": "1×15\", 2-way 单15, 2分频",
+            "driversLF": "1×15\" 低音喇叭",
+            "driversHF": "44 mm voice coil 44芯高音喇叭",
+            "freqRange": "45Hz-19kHz",
+            "sensitivity": "98dB",
+            "maxSpl": "124dB",
+            "nominalImp": "N/A",
+            "contPower": "400W/1600W",
+            "recAmp": "N/A",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "420×440×640mm",
+            "weight": "23"
+        }
+    },
+    {
+        "id": 37,
+        "name": "CL4H 有源音柱音箱",
+        "category": "音箱",
+        "subCategory": "CL4H系列",
+        "size": "3英寸",
+        "power": "100W",
+        "imp": "8Ω",
+        "freq": "105Hz-18kHz",
+        "image": "📏",
+        "desc": "CL4H是一款多用途有源DSP音柱系统，由4个3英寸定制低音驱动器组成。通过声学设计使多单元协同工作，形成垂直方向的波束控制，显著提升声音的清晰度和指向性。系统设计紧凑，易于搭建，非常适合中小型场所、会议室、多功能厅等需要优雅外观与清晰语音还原的场景。",
+        "tags": [
+            "音柱系统",
+            "DSP控制",
+            "高清晰度"
+        ],
+        "specs": {
+            "description": "Column Speaker 音柱音箱",
+            "configuration": "4×3\", 1-way, 4×3寸, 1分频",
+            "driversLF": "55 mm (3\") driver 低音喇叭",
+            "driversHF": "HF - 4 plane wave high frequency drive units 四个平面波高音喇叭",
+            "freqRange": "105Hz-18kHz(±3dB)",
+            "sensitivity": "88dB",
+            "maxSpl": "114dB",
+            "nominalImp": "8Ω",
+            "contPower": "100W/400W",
+            "recAmp": "N/A",
+            "enclosure": "High Density Board 高密度板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "100×130×505mm",
+            "weight": "5"
+        }
+    },
+    {
+        "id": 38,
+        "name": "LT-15B-DSP 有源低音炮",
+        "category": "音箱",
+        "subCategory": "CL4H系列",
+        "size": "15英寸",
+        "power": "400W",
+        "imp": "4Ω",
+        "freq": "37Hz-130Hz",
+        "image": "📻",
+        "desc": "LT-15B-DSP是一款内置DSP控制的高性能15寸有源超低音。搭载高效率Class D功放模块，为配套的音柱系统提供强劲的底蕴支撑。经过细致调测，该系统不仅低频表现深沉、富有弹性，且与全频音柱结合后的整体频响极为平衡。系统支持即插即用，满足移动演出或固定安装的高效需求。",
+        "tags": [
+            "有源超低音",
+            "大功率",
+            "即插即用"
+        ],
+        "specs": {
+            "description": "Subwoofer 有源低音炮",
+            "configuration": "1×15\", 1-way, 1×15寸, 1分频",
+            "driversLF": "381 mm (15\") driver 低音喇叭",
+            "driversHF": "N/A",
+            "freqRange": "37Hz-130Hz(±3dB)",
+            "sensitivity": "96dB",
+            "maxSpl": "122dB",
+            "nominalImp": "4Ω",
+            "contPower": "400W/1600W",
+            "recAmp": "N/A",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "440×620×670mm",
+            "weight": "34"
+        }
+    },
+    {
+        "id": 39,
+        "name": "R-240 柱形会议音箱",
+        "category": "音箱",
+        "subCategory": "R系列",
+        "size": "4.5英寸",
+        "power": "100W",
+        "imp": "8Ω",
+        "freq": "120Hz-16kHz",
+        "image": "🏛️",
+        "desc": "R系列柱形阵列扬声器专门为固定安装扩声系统设计。通过波束指向性控制技术，将声音清晰地传递至听众区，减少反射干扰。其修长纤细的箱体结构与严谨的外观，能完美融入机场、会议中心、宗教场所等各类建筑环境，重新定义了高品质人声还原的安装方案。",
+        "tags": [
+            "会议扩声",
+            "指向性控制",
+            "纤细箱体"
+        ],
+        "specs": {
+            "description": "Conference Speaker 会议音箱",
+            "configuration": "2×4.5\", 1-way 双4.5寸, 1分频",
+            "driversLF": "2×4.5\" 低音喇叭",
+            "driversHF": "N/A",
+            "freqRange": "120Hz-16kHz",
+            "sensitivity": "90dB",
+            "maxSpl": "110dB",
+            "nominalImp": "8Ω",
+            "contPower": "100W/400W",
+            "recAmp": "150W",
+            "enclosure": "N/A",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "150×180×290mm",
+            "weight": "4"
+        }
+    },
+    {
+        "id": 40,
+        "name": "FX-12 同轴会议音箱",
+        "category": "音箱",
+        "subCategory": "FX系列",
+        "size": "12英寸",
+        "power": "250W",
+        "imp": "8Ω",
+        "freq": "60Hz-20kHz",
+        "image": "🎯",
+        "desc": "FX系列采用高精度同轴驱动器设计，确保声音在全频段实现真正的相位对齐和点声源播放。其极强的语音穿透力和精心设计的分频网络，有效降低了啸叫风险。箱体设计小巧精致，配备U型吊挂件，安装便捷灵活，是高端会议室、剧场、报告厅等追求极佳音质空间的理想首选。",
+        "tags": [
+            "同轴技术",
+            "点声源",
+            "高还原度"
+        ],
+        "specs": {
+            "description": "Coaxial Loudspeaker 同轴喇叭",
+            "configuration": "1×12\", 2-way 单12, 2分频",
+            "driversLF": "1×12\" 305芯 低音喇叭",
+            "driversHF": "38 mm voice coil 38芯 高音喇叭",
+            "freqRange": "60Hz-20kHz",
+            "sensitivity": "98dB",
+            "maxSpl": "122dB",
+            "nominalImp": "8Ω",
+            "contPower": "250W/1000W",
+            "recAmp": "400W",
+            "enclosure": "Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "382×354×554mm",
+            "weight": "21"
+        }
+    },
+    {
+        "id": 41,
+        "name": "RX-100B 有源超低音音箱",
+        "category": "音箱",
+        "subCategory": "RX系列",
+        "size": "10英寸",
+        "power": "150W",
+        "imp": "4Ω",
+        "freq": "38Hz-120Hz",
+        "image": "🔈",
+        "desc": "RX系列有源超低音音箱，专为家庭影院和多功能会议室设计。内置独立高效功率放大器和滤波器，能显著增强低音质感。小巧的身躯可提供震撼的能量和现场感，有效弥补会议系统中低频不足的问题，使声音层次更加真实丰富。",
+        "tags": [
+            "有源音箱",
+            "超低音",
+            "家庭影院"
+        ],
+        "specs": {
+            "description": "Active Subwoofer 有源低音炮",
+            "configuration": "1x10\", 1-way 单10, 1分频",
+            "driversLF": "LF-1x10\" 10寸低音喇叭",
+            "driversHF": "N/A",
+            "freqRange": "38Hz ~ 120Hz",
+            "sensitivity": "85dB",
+            "maxSpl": "107dB",
+            "nominalImp": "N/A",
+            "contPower": "150W/600W",
+            "recAmp": "Class D (Built-in)",
+            "enclosure": "High Density Board 高密度板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "312x347x432mm",
+            "weight": "19.5kg"
+        }
+    },
+    {
+        "id": 42,
+        "name": "RX-150B 有源超低音音箱",
+        "category": "音箱",
+        "subCategory": "RX系列",
+        "size": "15英寸",
+        "power": "500W",
+        "imp": "4Ω",
+        "freq": "32Hz-120Hz",
+        "image": "🔊",
+        "desc": "作为RX系列中功率最强劲的型号，RX-150B配备15英寸大口径单元和700W(4Ω)放大模块。其箱体采用高密度板材配合黑色水性漆，坚固耐用。能够输出极具冲击力的低频能量，是构建大中型专业私人影院或多功能厅声场的理想选择。",
+        "tags": [
+            "大功率",
+            "超低音",
+            "专业音箱"
+        ],
+        "specs": {
+            "description": "Active Subwoofer 有源低音炮",
+            "configuration": "1x15\", 1-way 单15, 1分频",
+            "driversLF": "LF-1x15\" 15寸低音喇叭",
+            "driversHF": "N/A",
+            "freqRange": "32Hz ~ 120Hz",
+            "sensitivity": "94dB",
+            "maxSpl": "120dB",
+            "nominalImp": "N/A",
+            "contPower": "500W/2000W",
+            "recAmp": "Class D (Built-in)",
+            "enclosure": "High Density Board 高密度板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "430x510x559mm",
+            "weight": "47.5kg"
+        }
+    },
+    {
+        "id": 43,
+        "name": "CM-10 家庭影音系统主音箱",
+        "category": "音箱",
+        "subCategory": "CM系列",
+        "size": "10英寸",
+        "power": "150W",
+        "imp": "4Ω",
+        "freq": "51Hz-20kHz",
+        "image": "🎬",
+        "desc": "CM系列主音箱采用现代生产工艺与时尚外观设计，专为高端私人影院和KTV量身打造。采用10英寸低音与1英寸高音组成的2分频系统，声场开阔，细节还原细腻，既能满足动感的影视音效，也能胜任细腻的人声演唱。",
+        "tags": [
+            "主音箱",
+            "影K系统",
+            "高保真"
+        ],
+        "specs": {
+            "description": "Main Speaker 主音箱",
+            "configuration": "1x10\", 2-way 单10, 2分频",
+            "driversLF": "1x10\" 低音喇叭",
+            "driversHF": "1x1\" 低音喇叭",
+            "freqRange": "51Hz-20KHz",
+            "sensitivity": "91dB",
+            "maxSpl": "N/A",
+            "nominalImp": "4Ω",
+            "contPower": "150W/600W",
+            "recAmp": "N/A",
+            "enclosure": "High Density Board 高密度板",
+            "finish": "Rugged tour-grade textured paint 黑色水性漆",
+            "dimension": "328x231x465mm",
+            "weight": "12.5kg"
+        }
+    },
+    {
+        "id": 44,
+        "name": "HK-M8 影K中置音箱",
+        "category": "音箱",
+        "subCategory": "HK系列",
+        "size": "双8英寸",
+        "power": "220W",
+        "imp": "8Ω",
+        "freq": "80Hz-20kHz",
+        "image": "📻",
+        "desc": "HK-M8是一款双8英寸单元组成的中置音箱，采用二分频3单元低音密闭式设计。其核心优势在于极其清晰的人声对白表现力，声像定位准确，能与HK系列主音箱无缝衔接，为用户提供沉浸式的私人影院对白体验。",
+        "tags": [
+            "中置音箱",
+            "影K",
+            "密闭式"
+        ],
+        "specs": {
+            "description": "Dual 8\" Home Theater Center Speaker 双8寸影K中置音箱",
+            "configuration": "2-way, Bass-Closed Enclosure 二分频3单元 低音密闭式",
+            "driversLF": "2x8\"",
+            "driversHF": "1x1\"",
+            "freqRange": "80Hz ~ 20KHz",
+            "sensitivity": "90dB",
+            "maxSpl": "N/A",
+            "nominalImp": "8Ω",
+            "contPower": "220W",
+            "recAmp": "N/A",
+            "enclosure": "N/A",
+            "finish": "N/A",
+            "dimension": "291x611x181mm",
+            "weight": "N/A"
+        }
+    },
+    {
+        "id": 45,
+        "name": "C05 同轴多用途音箱",
+        "category": "音箱",
+        "subCategory": "C05系列",
+        "size": "5.5英寸",
+        "power": "100W",
+        "imp": "8Ω",
+        "freq": "150Hz-20kHz",
+        "image": "🎯",
+        "desc": "C05系列采用先进的电声设计理念，利用同轴单元技术实现完美的点声源结合。其声场覆盖角度精准且平滑，音质细腻且具备极高的还原度。无论作为补声音箱还是多用途扩声，都能在极小的体积下输出超高声压级。",
+        "tags": [
+            "同轴",
+            "点声源",
+            "紧凑型"
+        ],
+        "specs": {
+            "description": "Coaxial Multipurpose Speaker 同轴多用途音箱",
+            "configuration": "1x5.5\", 2-way 单5.5寸, 2分频",
+            "driversLF": "1x5.5\" 低音喇叭",
+            "driversHF": "38.5mm音圈高音",
+            "freqRange": "150Hz-20KHz",
+            "sensitivity": "92dB",
+            "maxSpl": "110dB",
+            "nominalImp": "8Ω",
+            "contPower": "100W/400W",
+            "recAmp": "N/A",
+            "enclosure": "High Quality Birch Plywood 桦木夹板",
+            "finish": "Rugged tour-grade textured paint 黑色水性耐磨油漆",
+            "dimension": "200x200x200mm",
+            "weight": "4.5kg"
+        }
+    },
+    {
+        "id": 46,
+        "name": "AK4600 专业四通道功放",
+        "category": "功放",
+        "subCategory": "AK系列",
+        "size": "2U",
+        "power": "600W x4",
+        "imp": "8Ω",
+        "freq": "20Hz-20kHz",
+        "image": "⚡",
+        "desc": "AK4600是一款专业四通道H类功率放大器，配备高效率环形变压器，提供持续稳定的动力。具备完善的短路、直流、过热及开机保护功能。前到后的通风设计保证长期高功率工作的散热性能，适用于各种扩声场所，支持立体声、并联及桥接模式。",
+        "tags": [
+            "四通道",
+            "H类功放",
+            "高性能"
+        ],
+        "specs": {
+            "description": "Power Amplifier 功率放大器",
+            "configuration": "4 Channel 四通道",
+            "driversLF": "N/A",
+            "driversHF": "N/A",
+            "freqRange": "20Hz-20KHz, ±0.5dB",
+            "sensitivity": "0.775V/1V/1.414V Optional",
+            "maxSpl": "N/A",
+            "nominalImp": "8Ω/4Ω",
+            "contPower": "600W x4 @ 8Ω / 900W x4 @ 4Ω",
+            "recAmp": "N/A",
+            "enclosure": "Standard 19 inch Rack",
+            "finish": "Aluminium Panel",
+            "dimension": "483x525x89mm",
+            "weight": "25.9kg"
+        }
+    },
+    {
+        "id": 47,
+        "name": "SY-S1+ 有源低音炮音箱",
+        "category": "音箱",
+        "subCategory": "SY系列",
+        "size": "10英寸",
+        "power": "150W",
+        "imp": "4Ω",
+        "freq": "35Hz-500Hz",
+        "image": "🔉",
+        "desc": "SY-S1+是SY家庭影音系统中的10英寸有源低音单元。采用前出向式倒相孔设计，能提供扎实有力的低频下潜。紧凑的箱体设计使其能轻松融入各种居家环境，为家庭院系统提供必要的低音动力支撑。",
+        "tags": [
+            "有源低音炮",
+            "影音系统",
+            "倒相式"
+        ],
+        "specs": {
+            "description": "10\" Home Theater Active Subwoofer 10寸有源低音炮音箱",
+            "configuration": "1-way, Bass-Reflex Enclosure 10\"低音炮前出式倒相孔",
+            "driversLF": "1x10\"",
+            "driversHF": "N/A",
+            "freqRange": "35Hz ~ 500KHz (Specs reflect catalog text)",
+            "sensitivity": "85dB",
+            "maxSpl": "N/A",
+            "nominalImp": "4Ω",
+            "contPower": "150W",
+            "recAmp": "N/A",
+            "enclosure": "N/A",
+            "finish": "N/A",
+            "dimension": "312x357x395mm",
+            "weight": "N/A"
+        }
+    },
+    {
+        "id": 48,
+        "name": "BH600 专业功率放大器",
+        "category": "功放",
+        "subCategory": "BH系列",
+        "size": "2U",
+        "power": "600W×2",
+        "imp": "8Ω",
+        "freq": "20Hz-20KHz",
+        "image": "⚡",
+        "desc": "BH系列功放在严苛的使用条件下表现出色，采用先进的电路设计，大幅度降低了重量并提升了输出效率。该系列具备完善的保护电路，包括开机信号延时启动、过流、过压、短路、过温保护等，确保在负载过重或恶劣环境下依然能高效稳定工作。信噪比大于105dB，转换速率高达80V/us，是专业扩声系统的理想选择。",
+        "tags": [
+            "高性价比",
+            "H类电路",
+            "全面保护"
+        ],
+        "specs": {
+            "description": "Professional Power Amplifier 专业功率放大器",
+            "configuration": "双通道",
+            "driversLF": "N/A",
+            "driversHF": "N/A",
+            "freqRange": "20Hz-20KHz, 30KHz±3dB",
+            "sensitivity": "0.775V",
+            "maxSpl": "N/A",
+            "nominalImp": "8Ω",
+            "contPower": "600W×2 @8Ω / 950W×2 @4Ω",
+            "recAmp": "N/A",
+            "enclosure": "钢制机箱",
+            "finish": "黑色烤漆",
+            "dimension": "450×483×90mm",
+            "weight": "20.5kg"
+        }
+    },
+    {
+        "id": 49,
+        "name": "BH1500 大功率专业功放",
+        "category": "功放",
+        "subCategory": "BH系列",
+        "size": "3U",
+        "power": "1500W×2",
+        "imp": "8Ω",
+        "freq": "20Hz-20KHz",
+        "image": "⚡",
+        "desc": "作为BH系列的高端型号，BH1500采用3U标准机架设计，提供强大的1500W双通道输出。其内部采用加强型散热系统与高冗余度电源设计，专为大型演艺、剧院及大型体育场馆设计。具备极高的阻尼系数（>223）和极低的失真（<0.05%），确保了声音的纯净度与对低频单元的完美控制力。",
+        "tags": [
+            "大功率",
+            "3U机架",
+            "剧场应用"
+        ],
+        "specs": {
+            "description": "High Power Amplifier 大功率功放",
+            "configuration": "双通道",
+            "driversLF": "N/A",
+            "driversHF": "N/A",
+            "freqRange": "20Hz-20KHz, 30KHz±3dB",
+            "sensitivity": "0.775V",
+            "maxSpl": "N/A",
+            "nominalImp": "8Ω",
+            "contPower": "1500W×2 @8Ω / 2250W×2 @4Ω",
+            "recAmp": "N/A",
+            "enclosure": "工业级机箱",
+            "finish": "耐磨黑漆",
+            "dimension": "530×483×132mm",
+            "weight": "39kg"
+        }
+    },
+    {
+        "id": 50,
+        "name": "BH4800 四通道功率放大器",
+        "category": "功放",
+        "subCategory": "BH系列(四通道)",
+        "size": "2U",
+        "power": "800W×4",
+        "imp": "8Ω",
+        "freq": "20Hz-20KHz",
+        "image": "🍀",
+        "desc": "BH4800是一款高效的四通道功率放大器，能在2U空间内提供四路独立的800W功率输出。该机型极大地节省了机柜空间，适合中小型阵列系统或多分区背景音乐系统。采用先进的电流保护和热管理技术，支持桥接模式，在8Ω负载下桥接功率可达2240W×2，灵活性极高且表现稳定。",
+        "tags": [
+            "四通道",
+            "空间节省",
+            "多功能"
+        ],
+        "specs": {
+            "description": "Four-Channel Power Amplifier 四通道功放",
+            "configuration": "四通道",
+            "driversLF": "N/A",
+            "driversHF": "N/A",
+            "freqRange": "20Hz-20KHz, 30KHz±3dB",
+            "sensitivity": "0.775V",
+            "maxSpl": "N/A",
+            "nominalImp": "8Ω",
+            "contPower": "800W×4 @8Ω / 1150W×4 @4Ω",
+            "recAmp": "N/A",
+            "enclosure": "标准钢材",
+            "finish": "喷砂黑",
+            "dimension": "450×483×90mm",
+            "weight": "29kg"
+        }
+    },
+    {
+        "id": 51,
+        "name": "ET1000 专业H类功放",
+        "category": "功放",
+        "subCategory": "ET系列",
+        "size": "2U",
+        "power": "1000W×2",
+        "imp": "8Ω",
+        "freq": "20Hz-20KHz",
+        "image": "💿",
+        "desc": "ET系列是最新开发的多功能、高频率功放，音色优美且稳定性极高。全系采用H类电路设计，不仅提升了能效比，更在恶劣的工作环境下展现出极强的适应能力。具备直流、短路、温度、压限及软启动保护功能。前置液晶状态显示屏（部分型号），方便实时监控功放工作状态，极具性价比。",
+        "tags": [
+            "H类电路",
+            "音质细腻",
+            "高适应性"
+        ],
+        "specs": {
+            "description": "H-Class Power Amplifier H类功放",
+            "configuration": "双通道",
+            "driversLF": "N/A",
+            "driversHF": "N/A",
+            "freqRange": "20Hz-20KHz ±0.1/0.3dB",
+            "sensitivity": "0.775V",
+            "maxSpl": "N/A",
+            "nominalImp": "8Ω",
+            "contPower": "1000W×2 @8Ω / 1600W×2 @4Ω",
+            "recAmp": "N/A",
+            "enclosure": "2U机箱",
+            "finish": "磨砂黑",
+            "dimension": "450×483×90mm",
+            "weight": "17kg"
+        }
+    },
+    {
+        "id": 52,
+        "name": "KC1500 工程专用功放",
+        "category": "功放",
+        "subCategory": "KC系列",
+        "size": "3U",
+        "power": "1500W×2",
+        "imp": "8Ω",
+        "freq": "20Hz-20KHz",
+        "image": "🔋",
+        "desc": "KC系列是专为工程应用设计的可靠型功放，通过先进的设计大幅减轻了重量。内部电路布局合理，散热效率极高，确保了在大功率长时间运行下的稳定性。其主输入电压适应性强，具备完整的保护机制。1500W的强劲功率输出，配合大于105dB的信噪比，使其能完美驱动各类大功率全频及超低音音箱。",
+        "tags": [
+            "工程首选",
+            "稳定耐用",
+            "强劲动力"
+        ],
+        "specs": {
+            "description": "Professional Engineering Amplifier 工程功放",
+            "configuration": "双通道",
+            "driversLF": "N/A",
+            "driversHF": "N/A",
+            "freqRange": "20Hz-20KHz, 30KHz±3dB",
+            "sensitivity": "0.775V",
+            "maxSpl": "N/A",
+            "nominalImp": "8Ω",
+            "contPower": "1500W×2 @8Ω / 2250W×2 @4Ω",
+            "recAmp": "N/A",
+            "enclosure": "加厚钢板",
+            "finish": "工业黑",
+            "dimension": "530×483×132mm",
+            "weight": "39kg"
+        }
+    },
+    {
+        "id": 53,
+        "name": "KM1008 环牛专业功放",
+        "category": "功放",
+        "subCategory": "KM系列",
+        "size": "2U",
+        "power": "1000W×2",
+        "imp": "8Ω",
+        "freq": "20Hz-20KHz",
+        "image": "🔘",
+        "desc": "KM系列采用经典的环形变压器（环牛）与H类电路搭配，提供持续稳定的电源供应与高效率转换。该系列注重声音细节，中高音细腻，低频厚实有力。前面板配备精密控制旋钮及详细的信号、削峰、故障指示灯，操作直观。支持立体声、并接、桥接三种模式切换，灵敏度可选，广泛应用于各类固定安装扩声场所。",
+        "tags": [
+            "环牛变压器",
+            "中高音细腻",
+            "稳定电源"
+        ],
+        "specs": {
+            "description": "H-Class Ring Transformer Amplifier 环牛功放",
+            "configuration": "双通道",
+            "driversLF": "N/A",
+            "driversHF": "N/A",
+            "freqRange": "20Hz-20KHz ±0.5dB",
+            "sensitivity": "0.775V/1V/1.4V/2V 可选",
+            "maxSpl": "N/A",
+            "nominalImp": "8Ω",
+            "contPower": "1000W×2 @8Ω / 1500W×2 @4Ω",
+            "recAmp": "N/A",
+            "enclosure": "2U机箱",
+            "finish": "银黑色面板",
+            "dimension": "483×378×89mm",
+            "weight": "18kg"
+        }
+    },
+    {
+        "id": 54,
+        "name": "DM1008 专业扩声功放",
+        "category": "功放",
+        "subCategory": "DM系列",
+        "size": "2U",
+        "power": "1000W×2",
+        "imp": "8Ω",
+        "freq": "20Hz-20KHz",
+        "image": "🎚️",
+        "desc": "DM系列功率放大器结合了稳健的电源供应与高效的H类放大技术。其核心优势在于极其平坦的频率响应与极低的互调失真。内部风道导流系统经过优化，能快速排出热量，保证设备长时间运行不掉电。拥有完善的直流、过载、短路、过热及开机防冲击等多重保护功能，是会议室、多功能厅等场所的高可靠性扩声方案。",
+        "tags": [
+            "高可靠性",
+            "优化散热",
+            "低失真"
+        ],
+        "specs": {
+            "description": "Professional Sound Reinforcement Amplifier 扩声功放",
+            "configuration": "双通道",
+            "driversLF": "N/A",
+            "driversHF": "N/A",
+            "freqRange": "20Hz-20KHz ±0.5dB",
+            "sensitivity": "0.775V/1V/1.4V/2V 可选",
+            "maxSpl": "N/A",
+            "nominalImp": "8Ω",
+            "contPower": "1000W×2 @8Ω / 1500W×2 @4Ω",
+            "recAmp": "N/A",
+            "enclosure": "工业级2U",
+            "finish": "全黑面板",
+            "dimension": "483×378×89mm",
+            "weight": "18kg"
+        }
+    },
+    {
+        "id": 55,
+        "name": "FW系列 专业功率放大器 (FW200-FW1500)",
+        "category": "功放",
+        "subCategory": "FW系列",
+        "size": "2U/3U",
+        "power": "200W-1500W",
+        "imp": "8Ω/4Ω",
+        "freq": "20Hz-20kHz",
+        "image": "⚡",
+        "desc": "FW系列功放专为严苛使用环境设计，具有极高的可靠性与音质表现。该系列采用先进的电路设计，显著降低了机身重量并提升了输出效率与散热性能。内置广泛的保护电路，确保在超负荷或大功率条件下依然能稳定工作。具备完善的开机信号延时启动、过流、过压、短路及过温保护功能，是专业扩声系统的理想选择。",
+        "tags": [
+            "高效率",
+            "多重保护",
+            "专业扩声"
+        ],
+        "specs": {
+            "description": "Professional Power Amplifier 专业功率放大器",
+            "configuration": "2-Channel Two-Channels",
+            "driversLF": "N/A",
+            "driversHF": "N/A",
+            "freqRange": "20Hz-20KHz, 30KHz±3dB",
+            "sensitivity": "0.775V",
+            "maxSpl": "N/A",
+            "nominalImp": "8Ω/4Ω",
+            "contPower": "200W-1500W (Stereo 8Ω)",
+            "recAmp": "N/A",
+            "enclosure": "Standard Rack Chassis",
+            "finish": "Black Paint",
+            "dimension": "450×483×90mm / 530×483×132mm",
+            "weight": "14kg - 39kg"
+        }
+    },
+    {
+        "id": 56,
+        "name": "KH系列 二通道/四通道专业功放",
+        "category": "功放",
+        "subCategory": "KH系列",
+        "size": "2U",
+        "power": "200W-800W",
+        "imp": "8Ω/4Ω",
+        "freq": "20Hz-20kHz",
+        "image": "🎚️",
+        "desc": "KH系列是一款兼具开创性与可靠性的专业功放，涵盖二通道与四通道型号。通过先进技术大幅减轻重量，同时增强了散热效率。该系列功放能够在高强度的超负荷环境下保持高效稳定的动力输出。其信噪比大于105dB，失真率低于0.02%，提供纯净的音频放大效果，并配备了全方位的电子保护系统，保障设备长期运行安全。",
+        "tags": [
+            "多通道",
+            "轻量化",
+            "高信噪比"
+        ],
+        "specs": {
+            "description": "Two/Four Channels Professional Power Amplifier 专业功率放大器",
+            "configuration": "2-Channel / 4-Channel",
+            "driversLF": "N/A",
+            "driversHF": "N/A",
+            "freqRange": "20Hz-20KHz, 30KHz±3dB",
+            "sensitivity": "0.775V",
+            "maxSpl": "N/A",
+            "nominalImp": "8Ω/4Ω",
+            "contPower": "200W-800W (Stereo 8Ω)",
+            "recAmp": "N/A",
+            "enclosure": "Standard 2U Chassis",
+            "finish": "Black/Silver Panel",
+            "dimension": "450×483×90mm",
+            "weight": "14kg - 29kg"
+        }
+    },
+    {
+        "id": 57,
+        "name": "LY系列 H类专业功率放大器",
+        "category": "功放",
+        "subCategory": "LY系列",
+        "size": "2U",
+        "power": "650W-1000W",
+        "imp": "8Ω/4Ω",
+        "freq": "20Hz-20kHz",
+        "image": "🔊",
+        "desc": "最新开发的LY系列功放以多功能、高质量和音色优美著称。全系列采用2U标准机箱，内部结构精良，搭载高效的H型电路设计，具有极高的性价比，深受行业人士推崇。该系列不仅重视对扬声器的保护，更致力于适应各种复杂的恶劣工作环境，确保在任何场合下都能轻松完成音频放大任务，提供强劲且稳定的动力支撑。",
+        "tags": [
+            "H类电路",
+            "高性价比",
+            "稳定性强"
+        ],
+        "specs": {
+            "description": "Professional Power Amplifier H类专业功放",
+            "configuration": "2-Channel Stereo",
+            "driversLF": "N/A",
+            "driversHF": "N/A",
+            "freqRange": "20Hz-20KHz±0.1/0.3dB",
+            "sensitivity": "0.775V",
+            "maxSpl": "N/A",
+            "nominalImp": "8Ω/4Ω",
+            "contPower": "650W-1000W (Stereo 8Ω)",
+            "recAmp": "N/A",
+            "enclosure": "2U Steel Chassis",
+            "finish": "Black Sand Blast",
+            "dimension": "483×346×88mm",
+            "weight": "15kg - 17kg"
+        }
+    },
+    {
+        "id": 58,
+        "name": "MQ系列 专业功率放大器",
+        "category": "功放",
+        "subCategory": "MQ系列",
+        "size": "2U",
+        "power": "180W-700W",
+        "imp": "8Ω/4Ω",
+        "freq": "20Hz-20kHz",
+        "image": "🎙️",
+        "desc": "MQ系列功放是一款集合了高品质音色与卓越稳定性的多功能音频放大设备。采用统一的2U标准机箱设计，外观精炼且结构坚固。该系列产品以出色的适应能力著称，能够轻松应对各种严酷的工作挑战。其电路设计优化了频率响应与总谐波失真，确保声音还原真实细腻，同时配备了完善的软启动、直流及短路保护系统，为用户提供安全放心的使用体验。",
+        "tags": [
+            "多功能",
+            "音色优美",
+            "2U机箱"
+        ],
+        "specs": {
+            "description": "Professional Power Amplifier 专业功率放大器",
+            "configuration": "2-Channel Stereo",
+            "driversLF": "N/A",
+            "driversHF": "N/A",
+            "freqRange": "20Hz-20KHz, 30KHz±3dB",
+            "sensitivity": "0.775V",
+            "maxSpl": "N/A",
+            "nominalImp": "8Ω/4Ω",
+            "contPower": "180W-700W (Stereo 8Ω)",
+            "recAmp": "N/A",
+            "enclosure": "Standard 2U Chassis",
+            "finish": "Black",
+            "dimension": "450×483×90mm",
+            "weight": "16kg - 22kg"
+        }
+    }
+];
+
+// ========== 子分类固定定义 ==========
+const FIXED_SUBS = {
+    '音箱': [],
+    '功放': [],
+    '其他': []
+};
+
+let activeCategory = '全部';
+let activeSub = '全部';
+let searchQuery = '';
+
+// ========== 辅助函数 ==========
+function getSubCategories(cat) {
+    if (cat === '全部') return [];
+    const fromData = [...new Set(PRODUCTS.filter(p => p.category === cat).map(p => p.subCategory))];
+    const merged = [...new Set([...(FIXED_SUBS[cat] || []), ...fromData])];
+    return ['全部', ...merged];
+}
+
+function getFilteredProducts() {
+    return PRODUCTS.filter(p => {
+        const matchCat = activeCategory === '全部' || p.category === activeCategory;
+        const matchSub = activeSub === '全部' || p.subCategory === activeSub;
+        const q = searchQuery.toLowerCase();
+        const matchSearch = p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q);
+        return matchCat && matchSub && matchSearch;
+    });
+}
+
+// ========== 渲染函数 ==========
+function renderSubCatBar() {
+    const subs = getSubCategories(activeCategory);
+    const bar = document.getElementById('sub-cat-bar');
+    const btnsContainer = document.getElementById('sub-cat-btns');
+
+    if (subs.length === 0 || activeCategory === '全部') {
+        bar.classList.add('hidden');
+        return;
+    }
+    bar.classList.remove('hidden');
+    btnsContainer.innerHTML = subs.map(sub => `
+        <button
+            onclick="setSub('${sub}')"
+            class="sub-btn flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
+                activeSub === sub
+                    ? 'bg-gray-200 text-gray-900 font-bold'
+                    : 'text-gray-500 hover:bg-gray-100'
+            }"
+        >${sub}</button>
+    `).join('');
+}
+
+function renderProducts() {
+    const filtered = getFilteredProducts();
+    const grid = document.getElementById('product-grid');
+    const empty = document.getElementById('empty-state');
+    const countEl = document.getElementById('product-count');
+    const titleEl = document.getElementById('section-title');
+
+    // 更新标题
+    if (activeCategory === '全部') {
+        titleEl.innerHTML = '所有设备';
+    } else {
+        titleEl.innerHTML = activeCategory + '系列' + (activeSub !== '全部' ? `<span class="text-gray-400 font-light ml-2">/ ${activeSub}</span>` : '');
+    }
+
+    countEl.textContent = filtered.length + ' 款产品';
+
+    if (filtered.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        empty.classList.add('flex');
+    } else {
+        empty.classList.add('hidden');
+        empty.classList.remove('flex');
+        grid.innerHTML = filtered.map((p, i) => `
+            <article
+                onclick="openDetail(${p.id})"
+                class="product-card-enter group flex flex-col bg-white border border-gray-100 rounded-3xl overflow-hidden hover:border-[#00f0ff]/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.06)] cursor-pointer"
+                style="animation-delay: ${i * 50}ms"
+            >
+                <figure class="relative aspect-[4/3] bg-gray-50 flex items-center justify-center p-8 overflow-hidden">
+                    <span class="text-7xl group-hover:scale-110 transition-transform duration-500 drop-shadow-md">${p.image}</span>
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-white/40 backdrop-blur-[2px] flex items-center justify-center">
+                        <span class="px-6 py-2.5 bg-gray-900 text-white text-xs font-bold rounded-full shadow-2xl flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all">
+                            查看详情 <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        </span>
+                    </div>
+                </figure>
+                <div class="p-6 flex flex-col flex-1">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2 group-hover:text-[#00f0ff] transition-colors">${p.name}</h3>
+                    <div class="grid grid-cols-2 gap-3 mt-auto pt-6 border-t border-gray-100">
+                        <div>
+                            <div class="text-[9px] text-gray-400 uppercase tracking-widest mb-1 flex items-center gap-1">
+                                <i class="fa-solid fa-microchip text-[8px]"></i> 功率
+                            </div>
+                            <div class="text-sm font-bold text-gray-700">${p.power}</div>
+                        </div>
+                        <div>
+                            <div class="text-[9px] text-gray-400 uppercase tracking-widest mb-1 flex items-center gap-1">
+                                <i class="fa-solid fa-gear text-[8px]"></i> 规格
+                            </div>
+                            <div class="text-sm font-bold text-gray-700">${p.size}</div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        `).join('');
+    }
+}
+
+// ========== 详情页 ==========
+function openDetail(id) {
+    const p = PRODUCTS.find(x => x.id === id);
+    if (!p) return;
+
+    document.getElementById('detail-image').textContent = p.image;
+    document.getElementById('detail-category').textContent = p.category + ' | ' + p.subCategory;
+    document.getElementById('detail-name').textContent = p.name;
+    document.getElementById('detail-desc').textContent = p.desc;
+
+    const s = p.specs || {};
+    const rows = [
+        { en: 'Description', cn: '描述', val: s.description },
+        { en: 'Configuration', cn: '配置', val: s.configuration },
+        { en: 'Drivers', cn: '单元组成 LF', val: s.driversLF },
+        { en: 'Drivers', cn: '单元组成 HF', val: s.driversHF },
+        { en: 'Frequency Range', cn: '轴向频率响应', val: s.freqRange },
+        { en: 'Sensitivity', cn: '灵敏度', val: s.sensitivity },
+        { en: 'MAX SPL', cn: '最大声压级', val: s.maxSpl },
+        { en: 'Nominal Impedance', cn: '标称阻抗', val: s.nominalImp },
+        { en: 'Continuous/Peak', cn: '功率: 额定/峰值', val: s.contPower },
+        { en: 'Recommended amplifier', cn: '推荐功放 (@8Ω)', val: s.recAmp },
+        { en: 'Enclosure material', cn: '箱体板材', val: s.enclosure },
+        { en: 'Finish', cn: '表面油漆', val: s.finish },
+        { en: 'Dimension (W×D×H)', cn: '产品尺寸', val: s.dimension },
+        { en: 'Net Weight(Kg)', cn: '产品净重', val: s.weight },
+    ];
+
+    document.getElementById('detail-specs-tbody').innerHTML = rows.map((row, i) => `
+        <tr class="border-b border-gray-100 last:border-0 ${i % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'}">
+            <td class="py-4 px-6 font-medium text-gray-500 w-1/3 border-r border-gray-100">
+                <span class="text-gray-400 mr-2">${row.en}</span>
+                <span class="text-gray-700">${row.cn}:</span>
+            </td>
+            <td class="py-4 px-6 text-gray-600">${row.val || 'N/A'}</td>
+        </tr>
+    `).join('');
+
+    document.getElementById('products-list-view').classList.add('hidden');
+    document.getElementById('filter-bar').classList.add('hidden');
+    document.getElementById('product-detail-view').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function closeDetail() {
+    document.getElementById('product-detail-view').classList.add('hidden');
+    document.getElementById('products-list-view').classList.remove('hidden');
+    document.getElementById('filter-bar').classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ========== 事件处理 ==========
+function setCategory(cat) {
+    activeCategory = cat;
+    activeSub = '全部';
+
+    // 更新主分类按钮样式
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+        const isActive = btn.dataset.cat === cat;
+        btn.className = `cat-btn flex-shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all border ${
+            isActive
+                ? 'bg-[#00f0ff] border-transparent text-white shadow-md'
+                : 'bg-white border-gray-200 text-gray-600 hover:border-gray-400'
+        }`;
+    });
+
+    renderSubCatBar();
+    renderProducts();
+}
+
+function setSub(sub) {
+    activeSub = sub;
+
+    // 更新子分类按钮样式
+    document.querySelectorAll('.sub-btn').forEach(btn => {
+        const isActive = btn.textContent.trim() === sub;
+        btn.className = `sub-btn flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-medium transition-all ${
+            isActive
+                ? 'bg-gray-200 text-gray-900 font-bold'
+                : 'text-gray-500 hover:bg-gray-100'
+        }`;
+    });
+
+    renderProducts();
+}
+
+function onSearch(val) {
+    searchQuery = val;
+    renderProducts();
+}
+
+// ========== 初始化 ==========
+document.addEventListener('DOMContentLoaded', function() {
+    renderProducts();
+});
+</script>

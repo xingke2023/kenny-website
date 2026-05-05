@@ -1,0 +1,43 @@
+<article class="pt-32 pb-24 min-h-screen">
+    <div class="max-w-4xl mx-auto px-6">
+        <!-- 文章头部 -->
+        <header class="mb-12">
+            <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
+                <a href="/" class="hover:text-[#00f0ff] transition-colors">首页</a>
+                <span>/</span>
+                <a href="/tech/" class="hover:text-[#00f0ff] transition-colors">技术·资讯</a>
+                <span>/</span>
+                <span class="text-gray-400"><%= page.title %></span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold text-white leading-tight mb-6"><%= page.title %></h1>
+            <div class="flex items-center gap-6 text-sm text-gray-500 border-b border-white/10 pb-6">
+                <span><i class="fa-regular fa-calendar mr-2"></i><%= page.date.format('YYYY-MM-DD') %></span>
+                <% if (page.categories && page.categories.length) { %>
+                    <span><i class="fa-solid fa-folder mr-2"></i><%= page.categories.map(c => c.name).join(', ') %></span>
+                <% } %>
+                <% if (page.tags && page.tags.length) { %>
+                    <span><i class="fa-solid fa-tags mr-2"></i><%= page.tags.map(t => t.name).join(', ') %></span>
+                <% } %>
+            </div>
+        </header>
+
+        <!-- 文章内容 -->
+        <div class="post-content">
+            <%- page.content %>
+        </div>
+
+        <!-- 底部导航 -->
+        <div class="mt-16 pt-8 border-t border-white/10 flex justify-between text-sm">
+            <% if (page.prev) { %>
+                <a href="<%= url_for(page.prev.path) %>" class="flex items-center gap-2 text-gray-400 hover:text-[#00f0ff] transition-colors">
+                    <i class="fa-solid fa-arrow-left"></i> <%= page.prev.title %>
+                </a>
+            <% } else { %><div></div><% } %>
+            <% if (page.next) { %>
+                <a href="<%= url_for(page.next.path) %>" class="flex items-center gap-2 text-gray-400 hover:text-[#00f0ff] transition-colors">
+                    <%= page.next.title %> <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            <% } else { %><div></div><% } %>
+        </div>
+    </div>
+</article>
